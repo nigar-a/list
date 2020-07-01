@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/hostimul/daltonik/dev.list.az
+    - /bin/cp -r * $DEPLOYPATH
