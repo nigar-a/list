@@ -252,14 +252,34 @@ class InlineRequestController extends Controller
 			return false;
 		}
 		
-		$deletedRows = SubAdmin1::countryOf($countryCode)->delete();
-		$deletedRows = SubAdmin2::countryOf($countryCode)->delete();
-		$deletedRows = City::countryOf($countryCode)->delete();
+		// Delete all SubAdmin1
+		$admin1s = SubAdmin1::countryOf($countryCode);
+		if ($admin1s->count() > 0) {
+			foreach ($admin1s->cursor() as $admin1) {
+				$admin1->delete();
+			}
+		}
 		
-		// Delete all Posts entries
-		$posts = Post::countryOf($countryCode)->get();
+		// Delete all SubAdmin2
+		$admin2s = SubAdmin2::countryOf($countryCode);
+		if ($admin2s->count() > 0) {
+			foreach ($admin2s->cursor() as $admin2) {
+				$admin2->delete();
+			}
+		}
+		
+		// Delete all Cities
+		$cities = City::countryOf($countryCode);
+		if ($cities->count() > 0) {
+			foreach ($cities->cursor() as $city) {
+				$city->delete();
+			}
+		}
+		
+		// Delete all Posts
+		$posts = Post::countryOf($countryCode);
 		if ($posts->count() > 0) {
-			foreach ($posts as $post) {
+			foreach ($posts->cursor() as $post) {
 				$post->delete();
 			}
 		}

@@ -51,8 +51,7 @@ class SubCategoryController extends PanelController
 		
 		$this->xPanel->enableParentEntity();
 		$this->xPanel->setParentKeyField('parent_id');
-		//$this->xPanel->addClause('where', 'parent_id', '=', $this->parentId);
-		$this->xPanel->whereFindInSet($this->parentId, 'parent_id');
+		$this->xPanel->addClause('where', 'parent_id', '=', $this->parentId);
 		$this->xPanel->setParentRoute(admin_uri('categories'));
 		$this->xPanel->setParentEntityNameStrings('parent ' . trans('admin::messages.category'), 'parent ' . trans('admin::messages.categories'));
 		$this->xPanel->allowAccess(['reorder', 'details_row', 'parent']);

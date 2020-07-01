@@ -18,6 +18,8 @@ namespace App\Http\Requests;
 use App\Helpers\Files\Storage\StorageDisk;
 use App\Models\CategoryField;
 use App\Models\PostValue;
+use App\Rules\DateIsValidRule;
+use App\Rules\VideoLinkIsValidRule;
 
 class CustomFieldRequest extends Request
 {
@@ -52,6 +54,31 @@ class CustomFieldRequest extends Request
 				// Check if the field is required
 				if ($field->required == 1 && $field->type != 'file') {
 					$cfRules[] = 'required';
+				}
+				
+				if ($field->type == 'url') {
+					if ($request->filled('cf.' . $field->tid)) {
+						$cfRules[] = 'url';
+					}
+				}
+				
+				if ($field->type == 'number') {
+					if ($request->filled('cf.' . $field->tid)) {
+						$cfRules[] = 'integer';
+					}
+				}
+				
+				if ($field->type == 'date' || $field->type == 'date_time') {
+					if ($request->filled('cf.' . $field->tid)) {
+						$cfRules[] = new DateIsValidRule('valid', true, $field->name);
+					}
+				}
+				
+				if ($field->type == 'video') {
+					if ($request->filled('cf.' . $field->tid)) {
+						$cfRules[] = 'url';
+						$cfRules[] = new VideoLinkIsValidRule($field->name);
+					}
 				}
 				
 				// Check if the field is an upload type
@@ -98,6 +125,23 @@ class CustomFieldRequest extends Request
 				// If the field is required
 				if ($field->required == 1) {
 					$messages['cf.' . $field->tid . '.required'] = t('The :field is required.', ['field' => mb_strtolower($field->name)]);
+				}
+				
+				if ($field->type == 'url' || $field->type == 'video') {
+					$messages['cf.' . $field->tid . '.url'] = t('The field :field must be a valid URL.', ['field' => mb_strtolower($field->name)]);
+				}
+				
+				if ($field->type == 'number') {
+					$messages['cf.' . $field->tid . '.integer'] = t('The field :field must be a number.', ['field' => mb_strtolower($field->name)]);
+				}
+				
+				if ($field->type == 'date' || $field->type == 'date_time') {
+					// Check out the DateIsValidRule class
+				}
+				
+				if ($field->type == 'video') {
+					// See the URL type field above, and...
+					// Check out the other rules about videos validation in the the VideoLinkIsValidRule class
 				}
 				
 				// If the field is an upload type

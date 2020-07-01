@@ -51,6 +51,7 @@ class PostNotification extends Notification implements ShouldQueue
 				'title'   => $this->post->title,
 				'now'     => Date::now(config('timezone.id'))->formatLocalized(config('settings.app.default_date_format')),
 				'time'    => Date::now(config('timezone.id'))->format('H:i'),
-			]));
+			]))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 	}
 }

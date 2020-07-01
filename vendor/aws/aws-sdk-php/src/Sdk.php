@@ -74,6 +74,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionCloudWatchEvents(array $args = [])
  * @method \Aws\CloudWatchLogs\CloudWatchLogsClient createCloudWatchLogs(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCloudWatchLogs(array $args = [])
+ * @method \Aws\CodeArtifact\CodeArtifactClient createCodeArtifact(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionCodeArtifact(array $args = [])
  * @method \Aws\CodeBuild\CodeBuildClient createCodeBuild(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCodeBuild(array $args = [])
  * @method \Aws\CodeCommit\CodeCommitClient createCodeCommit(array $args = [])
@@ -266,6 +268,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionMachineLearning(array $args = [])
  * @method \Aws\Macie\MacieClient createMacie(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionMacie(array $args = [])
+ * @method \Aws\Macie2\Macie2Client createMacie2(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionMacie2(array $args = [])
  * @method \Aws\ManagedBlockchain\ManagedBlockchainClient createManagedBlockchain(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionManagedBlockchain(array $args = [])
  * @method \Aws\MarketplaceCatalog\MarketplaceCatalogClient createMarketplaceCatalog(array $args = [])
@@ -447,7 +451,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.137.8';
+    const VERSION = '3.142.0';
 
     /** @var array Arguments for creating clients */
     private $args;

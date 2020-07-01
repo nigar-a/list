@@ -51,6 +51,7 @@ class ReportSent extends Notification implements ShouldQueue
 				'countryCode' => $this->post->country_code,
 			]))
 			->line(trans('mail.Post URL') . ': <a href="' . $postUrl . '">' . $postUrl . '</a>')
-			->line(nl2br($this->report->message));
+			->line(nl2br($this->report->message))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 	}
 }

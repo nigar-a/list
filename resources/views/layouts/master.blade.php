@@ -73,7 +73,8 @@
 	@if (config('settings.seo.yandex_verification'))
 		<meta name="yandex-verification" content="{{ config('settings.seo.yandex_verification') }}" />
 	@endif
-    
+	
+	@stack('before_styles_stack')
     @yield('before_styles')
 	
 	@if (config('lang.direction') == 'rtl')
@@ -89,7 +90,8 @@
 	@include('layouts.inc.tools.style')
 	
 	<link href="{{ url('css/custom.css') . getPictureVersion() }}" rel="stylesheet">
-    
+	
+	@stack('after_styles_stack')
     @yield('after_styles')
 	
 	@if (isset($plugins) and !empty($plugins))
@@ -159,6 +161,8 @@
 		@include('layouts.inc.header')
 	@show
 
+	@section('search')
+	@show
 		
 	@section('wizard')
 	@show
@@ -247,6 +251,7 @@
 	};
 </script>
 
+@stack('before_scripts_stack')
 @yield('before_scripts')
 
 <script src="{{ url(mix('js/app.js')) }}"></script>
@@ -294,6 +299,7 @@
 	});
 </script>
 
+@stack('after_scripts_stack')
 @yield('after_scripts')
 
 @if (isset($plugins) and !empty($plugins))

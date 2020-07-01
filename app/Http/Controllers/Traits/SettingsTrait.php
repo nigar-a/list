@@ -89,9 +89,9 @@ trait SettingsTrait
 		view()->share('dnsPrefetch', $dnsPrefetch);
 		
 		// SEO
-		$title       = getMetaTag('title', 'home');
+		$title = getMetaTag('title', 'home');
 		$description = getMetaTag('description', 'home');
-		$keywords    = getMetaTag('keywords', 'home');
+		$keywords = getMetaTag('keywords', 'home');
 		
 		// Meta Tags
 		MetaTag::set('title', $title);
@@ -100,7 +100,7 @@ trait SettingsTrait
 		
 		// Open Graph
 		$this->og = new OpenGraph();
-		$locale   = !empty(config('lang.locale')) ? config('lang.locale') : 'en_US';
+		$locale = !empty(config('lang.locale')) ? config('lang.locale') : 'en_US';
 		try {
 			$this->og->siteName(config('settings.app.app_name'))->locale($locale)->type('website')->url(rawurldecode(url()->current()));
 		} catch (\Exception $e) {};
@@ -136,7 +136,7 @@ trait SettingsTrait
 		view()->share('countryCols', $countries->chunk($maxRowsPerCol)->all());
 		
 		// Get Payment Methods
-		$this->paymentMethods      = Cache::remember(config('country.code') . '.paymentMethods.all', $this->cacheExpiration, function () {
+		$this->paymentMethods = Cache::remember(config('country.code') . '.paymentMethods.all', $this->cacheExpiration, function () {
 			return PaymentMethod::whereIn('name', array_keys((array)config('plugins.installed')))
 				->where(function ($query) {
 					$query->whereRaw('FIND_IN_SET("' . config('country.icode') . '", LOWER(countries)) > 0')

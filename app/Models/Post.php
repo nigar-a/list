@@ -191,6 +191,7 @@ class Post extends BaseModel implements Feedable
 			->id($link)
 			->title($title)
 			->summary($summary)
+			->category((!empty($this->category)) ? $this->category->name : '')
 			->updated($this->updated_at)
 			->link($link)
 			->author($this->contact_name);

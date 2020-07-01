@@ -63,7 +63,7 @@ class CategoryController extends BaseController
 			view()->share('isSubCatSearch', $this->isSubCatSearch);
 			
 			// Get SubCategory
-			$this->subCat = Category::trans()->whereRaw('FIND_IN_SET('.$this->cat->tid.',parent_id)')->where('slug', '=', $subCatSlug)->firstOrFail();
+			$this->subCat = Category::trans()->where('parent_id', $this->cat->tid)->where('slug', '=', $subCatSlug)->firstOrFail();
 			view()->share('subCat', $this->subCat);
 			
 			// Get common Data
