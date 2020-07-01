@@ -27,7 +27,8 @@ if (typeof langLayout !== 'undefined' && typeof langLayout.select2 !== 'undefine
 	select2Language = langLayout.select2;
 }
 
-$(document).ready(function () {
+$(document).ready(function()
+{
 	/* CSRF Protection */
 	var token = $('meta[name="csrf-token"]').attr('content');
 	if (token) {
@@ -37,77 +38,75 @@ $(document).ready(function () {
 			cache: false
 		});
 	}
-	
-	/* Get and Bind administrative divisions */
-	getAdminDivisions(countryCode, adminType, selectedAdminCode);
-	$('#countryCode').on('click, change', function () {
+
+    /* Get and Bind administrative divisions */
+    getAdminDivisions(countryCode, adminType, selectedAdminCode);
+    $('#countryCode').bind('click, change', function() {
 		countryCode = $(this).val();
-		getAdminDivisions(countryCode, adminType, 0);
-	});
-	
-	/* Get and Bind the selected city */
-	if (adminType == 0) {
+        getAdminDivisions(countryCode, adminType, 0);
+    });
+    
+    /* Get and Bind the selected city */
+    if (adminType == 0) {
 		getSelectedCity(countryCode, cityId);
 	}
-	
-	/* Get and Bind cities */
-	$('#cityId').select2({
+    
+    /* Get and Bind cities */
+    $('#cityId').select2({
 		language: select2Language,
-		ajax: {
-			url: function () {
+        ajax: {
+            url: function () {
 				/* Get the current country code */
 				var selectedCountryCode = $('#countryCode').val();
 				if (typeof selectedCountryCode !== "undefined") {
 					countryCode = selectedCountryCode;
 				}
-				
-				/* Get the current admin code */
-				var selectedAdminCode = $('#adminCode').val();
-				if (typeof selectedAdminCode === "undefined") {
-					selectedAdminCode = 0;
-				}
-				return siteUrl + '/ajax/countries/' + countryCode + '/admins/' + adminType + '/' + selectedAdminCode + '/cities';
-			},
-			dataType: 'json',
-			delay: 50,
-			data: function (params) {
-				var query = {
-					languageCode: languageCode,
-					q: params.term, /* search term */
-					page: params.page
-				};
-				
-				return query;
-			},
-			processResults: function (data, params) {
-				/*
-				// parse the results into the format expected by Select2
-				// since we are using custom formatting functions we do not need to
-				// alter the remote JSON data, except to indicate that infinite
-				// scrolling can be used
-				*/
-				params.page = params.page || 1;
-				
-				return {
-					results: data.items,
-					pagination: {
-						more: (params.page * 10) < data.totalEntries
-					}
-				};
-			},
-			cache: true
-		},
-		escapeMarkup: function (markup) {
-			return markup;
-		}, /* let our custom formatter work */
-		minimumInputLength: 2,
-		templateResult: function (data) {
-			return data.text;
-		},
-		templateSelection: function (data, container) {
-			return data.text;
-		}
-	});
+
+                /* Get the current admin code */
+                var selectedAdminCode = $('#adminCode').val();
+                if (typeof selectedAdminCode === "undefined") {
+                    selectedAdminCode = 0;
+                }
+                return siteUrl + '/ajax/countries/' + countryCode + '/admins/' + adminType + '/' + selectedAdminCode + '/cities';
+            },
+            dataType: 'json',
+            delay: 50,
+            data: function (params) {
+                var query = {
+                    languageCode: languageCode,
+                    q: params.term, /* search term */
+                    page: params.page
+                };
+                
+                return query;
+            },
+            processResults: function (data, params) {
+            	/*
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                */
+                params.page = params.page || 1;
+                
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 10) < data.totalEntries
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) { return markup; }, /* let our custom formatter work */
+        minimumInputLength: 2,
+        templateResult: function (data) {
+            return data.text;
+        },
+        templateSelection: function (data, container) {
+            return data.text;
+        }
+    });
 });
 
 /**
@@ -118,21 +117,23 @@ $(document).ready(function () {
  * @param selectedAdminCode
  * @returns {*}
  */
-function getAdminDivisions(countryCode, adminType, selectedAdminCode) {
-	if (countryCode === 0 || countryCode === '') return false;
+function getAdminDivisions(countryCode, adminType, selectedAdminCode)
+{
+    if (countryCode == 0 || countryCode == '') return false;
 	
 	/* Make ajax call */
 	$.ajax({
 		method: 'GET',
 		url: siteUrl + '/ajax/countries/' + countryCode + '/admins/' + adminType + '?languageCode=' + languageCode
-	}).done(function (obj) {
+	}).done(function(obj)
+	{
 		/* Init. */
 		$('#adminCode').empty().append('<option value="0">' + lang.select.admin + '</option>').val('0').trigger('change');
 		$('#cityId').empty().append('<option value="0">' + lang.select.city + '</option>').val('0').trigger('change');
 		
 		/* Bind data into Select list */
 		if (typeof obj.error !== 'undefined') {
-			$('#adminCode').find('option').remove().end().append('<option value="0"> ' + obj.error.message + ' </option>');
+			$('#adminCode').find('option').remove().end().append('<option value="0"> '+ obj.error.message +' </option>');
 			$('#adminCode').closest('.form-group').addClass('has-error');
 			return false;
 		} else {
@@ -153,8 +154,8 @@ function getAdminDivisions(countryCode, adminType, selectedAdminCode) {
 		/* Get and Bind the selected city */
 		getSelectedCity(countryCode, cityId);
 	});
-	
-	return selectedAdminCode;
+
+    return selectedAdminCode;
 }
 
 /**
@@ -164,9 +165,10 @@ function getAdminDivisions(countryCode, adminType, selectedAdminCode) {
  * @param cityId
  * @returns {number}
  */
-function getSelectedCity(countryCode, cityId) {
+function getSelectedCity(countryCode, cityId)
+{
 	/* Clear by administrative divisions selection */
-	$('#adminCode').on('click, change', function () {
+	$('#adminCode').bind('click, change', function() {
 		$('#cityId').empty().append('<option value="0">' + lang.select.city + '</option>').val('0').trigger('change');
 	});
 	
@@ -174,10 +176,12 @@ function getSelectedCity(countryCode, cityId) {
 	$.ajax({
 		method: 'GET',
 		url: siteUrl + '/ajax/countries/' + countryCode + '/cities/' + cityId + '?languageCode=' + languageCode
-	}).done(function (data) {
+	}).done(function(data)
+	{
 		$('#cityId').empty().append('<option value="' + data.id + '">' + data.text + '</option>').val(data.id).trigger('change');
 		return data.id;
-	}).fail(function () {
+	}).fail(function()
+	{
 		$('#cityId').empty().append('<option value="0">' + lang.select.city + '</option>').val('0').trigger('change');
 		return 0;
 	});

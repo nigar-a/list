@@ -43,21 +43,21 @@ class EditController extends AccountBaseController
 		$data = [];
 		
 		$data['countries'] = CountryLocalizationHelper::transAll(CountryLocalization::getCountries());
-		$data['genders'] = Gender::trans()->get();
-		$data['gravatar'] = (!empty(auth()->user()->email)) ? Gravatar::fallback(url('images/user.jpg'))->get(auth()->user()->email) : null;
+		$data['genders']   = Gender::trans()->get();
+		$data['gravatar']  = (!empty(auth()->user()->email)) ? Gravatar::fallback(url('images/user.jpg'))->get(auth()->user()->email) : null;
 		$data['userPhoto'] = $data['gravatar'];
 		if (!empty(auth()->user()->photo)) {
 			$data['userPhoto'] = imgUrl(auth()->user()->photo);
 		}
 		
 		// Mini Stats
-		$data['countPostsVisits'] = DB::table('posts')
+		$data['countPostsVisits']   = DB::table('posts')
 			->select('user_id', DB::raw('SUM(visits) as total_visits'))
 			->where('country_code', config('country.code'))
 			->where('user_id', auth()->user()->id)
 			->groupBy('user_id')
 			->first();
-		$data['countPosts'] = Post::currentCountry()
+		$data['countPosts']         = Post::currentCountry()
 			->where('user_id', auth()->user()->id)
 			->count();
 		$data['countFavoritePosts'] = SavedPost::whereHas('post', function ($query) {
@@ -79,8 +79,8 @@ class EditController extends AccountBaseController
 	public function updateDetails(UserRequest $request)
 	{
 		// Check if these fields has changed
-		$emailChanged = $request->filled('email') && $request->input('email') != auth()->user()->email;
-		$phoneChanged = $request->filled('phone') && $request->input('phone') != auth()->user()->phone;
+		$emailChanged    = $request->filled('email') && $request->input('email') != auth()->user()->email;
+		$phoneChanged    = $request->filled('phone') && $request->input('phone') != auth()->user()->phone;
 		$usernameChanged = $request->filled('username') && $request->input('username') != auth()->user()->username;
 		
 		// Conditions to Verify User's Email or Phone
@@ -103,13 +103,13 @@ class EditController extends AccountBaseController
 		
 		// Email verification key generation
 		if ($emailVerificationRequired) {
-			$user->email_token = md5(microtime() . mt_rand());
+			$user->email_token    = md5(microtime() . mt_rand());
 			$user->verified_email = 0;
 		}
 		
 		// Phone verification key generation
 		if ($phoneVerificationRequired) {
-			$user->phone_token = mt_rand(100000, 999999);
+			$user->phone_token    = mt_rand(100000, 999999);
 			$user->verified_phone = 0;
 		}
 		
@@ -169,17 +169,13 @@ class EditController extends AccountBaseController
 		}
 		
 		// Get User
-		$user = null;
-		if ($userId == auth()->user()->id) {
-			$user = User::find($userId);
-		}
+		$user = User::find($userId);
 		
-		if (!isset($user) || empty($user)) {
-			$msg = t('User not found');
+		if (empty($user)) {
 			if ($request->ajax()) {
-				return response()->json(['error' => $msg]);
+				return response()->json(['error' => t('User not found')]);
 			}
-			abort(404, $msg);
+			abort(404);
 		}
 		
 		// Save all pictures
@@ -192,8 +188,8 @@ class EditController extends AccountBaseController
 		
 		// Ajax response
 		if ($request->ajax()) {
-			$data = [];
-			$data['initialPreview'] = [];
+			$data                         = [];
+			$data['initialPreview']       = [];
 			$data['initialPreviewConfig'] = [];
 			
 			if (!empty($user->photo)) {
@@ -243,17 +239,13 @@ class EditController extends AccountBaseController
 		}
 		
 		// Get User
-		$user = null;
-		if ($userId == auth()->user()->id) {
-			$user = User::find($userId);
-		}
+		$user = User::find($userId);
 		
-		if (!isset($user) || empty($user)) {
-			$msg = t('User not found');
+		if (empty($user)) {
 			if ($request->ajax()) {
-				return response()->json(['error' => $msg]);
+				return response()->json(['error' => t('User not found')]);
 			}
-			abort(404, $msg);
+			abort(404);
 		}
 		
 		// Remove all the current user's photos, by removing his photo directory.

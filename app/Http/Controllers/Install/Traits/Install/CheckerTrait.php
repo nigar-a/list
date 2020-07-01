@@ -15,6 +15,7 @@
 
 namespace App\Http\Controllers\Install\Traits\Install;
 
+
 use App\Helpers\Number;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ trait CheckerTrait
 	/**
 	 * Get the system compatibilities data
 	 *
-	 * @return array[]
+	 * @return array
 	 */
 	private function getSystemCompatibilitiesData()
 	{
@@ -53,12 +54,6 @@ trait CheckerTrait
 				'name'  => 'PDO PHP Extension',
 				'check' => extension_loaded('pdo'),
 				'note'  => 'PDO PHP Extension is required.',
-			],
-			[
-				'type'  => 'requirement',
-				'name'  => 'MySQL driver for PDO',
-				'check' => extension_loaded('pdo_mysql'),
-				'note'  => 'MySQL driver for PDO is required.',
 			],
 			[
 				'type'  => 'requirement',
@@ -114,7 +109,7 @@ trait CheckerTrait
 	/**
 	 * Check for requirement when install app (Automatic)
 	 *
-	 * @param \Illuminate\Http\Request $request
+	 * @param Request $request
 	 * @param $compatibilities
 	 * @return bool
 	 */
@@ -169,7 +164,7 @@ trait CheckerTrait
 	/**
 	 * Get the composer.json required PHP version
 	 *
-	 * @return int|mixed|string
+	 * @return mixed|string
 	 */
 	private function getComposerRequiredPhpVersion()
 	{

@@ -8,7 +8,6 @@ return [
 into your web browser:' => 'თუ თქვენ გაქვთ პრობლემები, დააჭირეთ ":actionText" ღილაკს, დააკოპირეთ ქვემოთ მოყვანილი URL
 თქვენს ბრაუზერში:',
     'All rights reserved.' => 'ყველა უფლება დაცულია.',
-	'footer_salutation' => 'პატივისცემით,<br>:appName',
     'mail_footer_content' => 'გამორჩეული განცხადებები. როდესაც გინდა რაღაც შეცვალო.',
     'email_verification_title' => 'E-mail მისამართის დადასტურება',
     'email_verification_action' => 'დაადასტურეთ თქვენი E-mail მისამართი',

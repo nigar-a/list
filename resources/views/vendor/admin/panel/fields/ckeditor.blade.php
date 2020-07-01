@@ -25,80 +25,23 @@
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
-        <script src="{{ asset('assets/plugins/ckeditor/ckeditor.js') }}"></script>
+        <script src="{{ asset('vendor/admin/ckeditor/ckeditor.js') }}"></script>
+        <script src="{{ asset('vendor/admin/ckeditor/adapters/jquery.js') }}"></script>
     @endpush
 
 @endif
 
 {{-- FIELD JS - will be loaded in the after_scripts section --}}
 @push('crud_fields_scripts')
-    <?php
-    $editorLocale = '';
-    if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . ietfLangTag(config('app.locale')) . '.js')) {
-        $editorLocale = ietfLangTag(config('app.locale'));
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . ietfLangTag(config('lang.locale')) . '.js')) {
-            $editorLocale = ietfLangTag(config('lang.locale'));
-        }
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . strtolower(ietfLangTag(config('lang.locale'))) . '.js')) {
-            $editorLocale = strtolower(ietfLangTag(config('lang.locale')));
-        }
-    }
-    if (empty($editorLocale)) {
-        $editorLocale = 'en';
-    }
-    ?>
-    @if ($editorLocale != 'en')
-        <script src="{{ asset('assets/plugins/ckeditor/translations/' . $editorLocale . '.js') }}"></script>
-    @endif
 <script>
     jQuery(document).ready(function($) {
-        ClassicEditor.create(document.querySelector('textarea[name="{{ $field['name'] }}"].ckeditor'), {
-            language: '{{ $editorLocale }}',
-            toolbar: {
-                items: [
-                    'undo',
-                    'redo',
-                    '|',
-                    'bold',
-                    'italic',
-                    '|',
-                    'fontColor',
-                    'fontBackgroundColor',
-                    '|',
-                    'bulletedList',
-                    'numberedList',
-                    'blockQuote',
-                    'alignment',
-                    '|',
-                    'insertTable',
-                    'link',
-                    '|',
-                    'heading',
-                    '|',
-                    'indent',
-                    'outdent',
-                    '|',
-                    'removeFormat'
-                ]
-            },
-            table: {
-                contentToolbar: [
-                    'tableColumn',
-                    'tableRow',
-                    'mergeTableCells'
-                ]
-            }
-        }).then( editor => {
-            window.editor = editor;
-        }).catch(error => {
-            console.error('Oops, something gone wrong!');
-            console.error('Please, report the following error in the https://github.com/ckeditor/ckeditor5 with the build id and the error stack trace:');
-            console.warn('Build id: v28nci2fjq9h-1yblopey8x43');
-            console.error(error);
+        // CKEdito Toolbar
+        CKEDITOR.config.toolbar = [
+            ['Bold','Italic','Underline','Strike','-','RemoveFormat','-','NumberedList','BulletedList','-','Undo','Redo','-','Table','-','Link','Unlink','Smiley','Source']
+        ];
+        $('textarea[name="{{ $field['name'] }}"].ckeditor').ckeditor({
+            //"extraPlugins" : '{{ isset($field['extra_plugins']) ? implode(',', $field['extra_plugins']) : 'oembed,widget' }}',
+            language: '{{ config('app.locale') }}'
         });
     });
 </script>

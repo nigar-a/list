@@ -15,7 +15,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Field;
 use Larapen\Admin\app\Http\Controllers\PanelController;
 use App\Http\Requests\Admin\FieldRequest as StoreRequest;
 use App\Http\Requests\Admin\FieldRequest as UpdateRequest;
@@ -47,9 +46,9 @@ class FieldController extends PanelController
 		*/
 		// COLUMNS
 		$this->xPanel->addColumn([
-			'name'      => 'id',
-			'label'     => '',
-			'type'      => 'checkbox',
+			'name'  => 'id',
+			'label' => '',
+			'type'  => 'checkbox',
 			'orderable' => false,
 		]);
 		$this->xPanel->addColumn([
@@ -59,10 +58,8 @@ class FieldController extends PanelController
 			'function_name' => 'getNameHtml',
 		]);
 		$this->xPanel->addColumn([
-			'name'          => 'type',
-			'label'         => trans("admin::messages.Type"),
-			'type'          => 'model_function',
-			'function_name' => 'getTypeHtml',
+			'name'  => 'type',
+			'label' => trans("admin::messages.Type"),
 		]);
 		$this->xPanel->addColumn([
 			'name'          => 'active',
@@ -88,11 +85,9 @@ class FieldController extends PanelController
 			],
 		]);
 		$this->xPanel->addField([
-			'name'        => 'type',
-			'label'       => trans("admin::messages.Type"),
-			'type'        => 'select_from_array',
-			'options'     => Field::fieldTypes(),
-			'allows_null' => false,
+			'name'  => 'type',
+			'label' => trans("admin::messages.Type"),
+			'type'  => 'enum',
 		]);
 		$this->xPanel->addField([
 			'name'       => 'max',
@@ -114,21 +109,6 @@ class FieldController extends PanelController
 			'name'  => 'required',
 			'label' => trans("admin::messages.Required"),
 			'type'  => 'checkbox',
-		]);
-		$this->xPanel->addField([
-			'name'       => 'help',
-			'label'      => trans("admin::messages.Help"),
-			'type'       => 'text',
-			'attributes' => [
-				'placeholder' => trans("admin::messages.Help"),
-			],
-			'hint'       => trans('admin::messages.cf_help_hint'),
-		]);
-		$this->xPanel->addField([
-			'name'  => 'use_as_filter',
-			'label' => trans("admin::messages.cf_use_as_filter_label"),
-			'type'  => 'checkbox',
-			'hint'  => trans('admin::messages.cf_use_as_filter_hint'),
 		]);
 		$this->xPanel->addField([
 			'name'  => 'active',

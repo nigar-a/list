@@ -115,7 +115,7 @@
 											<?php
 												$descriptionErrorLabel = '';
 												$descriptionColClass = 'col-md-8';
-												if (config('settings.single.wysiwyg_editor') != 'none') {
+												if (config('settings.single.simditor_wysiwyg')) {
 													$descriptionColClass = 'col-md-12';
 													$descriptionErrorLabel = $descriptionError;
 												}
@@ -127,7 +127,7 @@
 												<textarea class="form-control{{ $descriptionError }}"
 														  id="description"
 														  name="description"
-														  rows="15"
+														  rows="10"
 												>{{ old('description') }}</textarea>
 												<small id="" class="form-text text-muted">{{ t('Describe what makes your ad unique') }}...</small>
 											</div>
@@ -398,9 +398,77 @@
 @endsection
 
 @section('after_styles')
+	@include('layouts.inc.tools.wysiwyg.css')
 @endsection
 
 @section('after_scripts')
-@endsection
+    @include('layouts.inc.tools.wysiwyg.js')
 
-@include('post.createOrEdit.inc.form-plugins')
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min.js"></script>
+	@if (file_exists(public_path() . '/assets/plugins/forms/validation/localization/messages_'.config('app.locale').'.min.js'))
+		<script src="{{ url('assets/plugins/forms/validation/localization/messages_'.config('app.locale').'.min.js') }}" type="text/javascript"></script>
+	@endif
+	
+	<script>
+		/* Translation */
+		var lang = {
+			'select': {
+				'category': "{{ t('Select a category') }}",
+				'subCategory': "{{ t('Select a sub-category') }}",
+				'country': "{{ t('Select a country') }}",
+				'admin': "{{ t('Select a location') }}",
+				'city': "{{ t('Select a city') }}"
+			},
+			'price': "{{ t('Price') }}",
+			'salary': "{{ t('Salary') }}",
+			'nextStepBtnLabel': {
+			    'next': "{{ t('Next') }}",
+                'submit': "{{ t('Submit') }}"
+			}
+		};
+		
+		/* Categories */
+		var category = {{ old('parent_id', 0) }};
+		var categoryType = '{{ old('parent_type') }}';
+		if (categoryType=='') {
+			var selectedCat = $('select[name=parent_id]').find('option:selected');
+			categoryType = selectedCat.data('type');
+		}
+		var subCategory = {{ old('category_id', 0) }};
+		
+		/* Custom Fields */
+		var errors = '{!! addslashes($errors->toJson()) !!}';
+		var oldInput = '{!! addslashes(collect(session()->getOldInput('cf'))->toJson()) !!}';
+		var postId = '';
+		
+		/* Locations */
+        var countryCode = '{{ old('country_code', config('country.code', 0)) }}';
+        var adminType = '{{ config('country.admin_type', 0) }}';
+        var selectedAdminCode = '{{ old('admin_code', (isset($admin) ? $admin->code : 0)) }}';
+        var cityId = '{{ old('city_id', (isset($post) ? $post->city_id : 0)) }}';
+		
+		/* Packages */
+		var packageIsEnabled = false;
+        @if (isset($packages) and isset($paymentMethods) and $packages->count() > 0 and $paymentMethods->count() > 0)
+            packageIsEnabled = true;
+        @endif
+
+	</script>
+	<script>
+		$(document).ready(function() {
+			$('#tags').tagit({
+				fieldName: 'tags',
+				placeholderText: '{{ t('add a tag') }}',
+				caseSensitive: false,
+				allowDuplicates: false,
+				allowSpaces: false,
+				tagLimit: {{ (int)config('settings.single.tags_limit', 15) }},
+				singleFieldDelimiter: ','
+			});
+		});
+	</script>
+	
+	<script src="{{ url('assets/js/app/d.select.category.js') . vTime() }}"></script>
+	<script src="{{ url('assets/js/app/d.select.location.js') . vTime() }}"></script>
+@endsection

@@ -32,9 +32,9 @@ class PostTypeObserver extends TranslatedModelObserver
 		parent::deleting($postType);
 		
 		// Delete all the postType's posts
-		$posts = Post::where('post_type_id', $postType->id);
+		$posts = Post::where('post_type_id', $postType->id)->get();
 		if ($posts->count() > 0) {
-			foreach ($posts->cursor() as $post) {
+			foreach ($posts as $post) {
 				$post->delete();
 			}
 		}

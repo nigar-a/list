@@ -80,8 +80,7 @@ class PaymentApproved extends Notification implements ShouldQueue
 				'amount'            => $this->package->price,
 				'currency'          => $this->package->currency_code,
 				'paymentMethodName' => $this->paymentMethod->display_name
-			]))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			]));
 	}
 	
 	public function toNexmo($notifiable)

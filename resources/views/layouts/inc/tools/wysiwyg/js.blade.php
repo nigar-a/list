@@ -1,205 +1,86 @@
-{{-- TinyMCE --}}
-@if (config('settings.single.wysiwyg_editor') == 'tinymce')
-    <script src="{{ asset('assets/plugins/tinymce/tinymce.min.js') }}"></script>
-    <?php
-    $editorI18n = \Lang::get('tinymce', [], config('app.locale'));
-    $editorI18nJson = '';
-    if (!empty($editorI18n)) {
-        $editorI18nJson = collect($editorI18n)->toJson();
-        // Escaped Unicode characters to HTML hex references. E.g. \u00e9 => &#x00e9;
-        $editorI18nJson = preg_replace('/\\\\u([a-fA-F0-9]{4})/ui', '&#x\\1;', $editorI18nJson);
-        // Convert HTML entities to their corresponding characters. E.g. &#x00e9; => é
-        $editorI18nJson = html_entity_decode($editorI18nJson);
-    }
-    ?>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: '#description',
-            language: '{{ (!empty($editorI18nJson)) ? config('app.locale') : 'en' }}',
-            directionality: '{{ (config('lang.direction') == 'rtl') ? 'rtl' : 'ltr' }}',
-            height: 350,
-            menubar: false,
-            statusbar: false,
-            plugins: 'lists link table',
-            toolbar: 'undo redo | bold italic underline | forecolor backcolor | bullist numlist blockquote table | link unlink | alignleft aligncenter alignright | outdent indent | fontsizeselect',
-        });
-        @if (!empty($editorI18nJson))
-            tinymce.addI18n('{{ config('app.locale') }}', <?php echo $editorI18nJson; ?>);
-        @endif
-    </script>
-@endif
-
-{{-- CKEditor --}}
-@if (config('settings.single.wysiwyg_editor') == 'ckeditor')
-    <script src="{{ asset('assets/plugins/ckeditor/ckeditor.js') }}"></script>
-    <?php
-    $editorLocale = '';
-    if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . ietfLangTag(config('app.locale')) . '.js')) {
-        $editorLocale = ietfLangTag(config('app.locale'));
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . ietfLangTag(config('lang.locale')) . '.js')) {
-            $editorLocale = ietfLangTag(config('lang.locale'));
-        }
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/ckeditor/translations/' . strtolower(ietfLangTag(config('lang.locale'))) . '.js')) {
-            $editorLocale = strtolower(ietfLangTag(config('lang.locale')));
-        }
-    }
-    if (empty($editorLocale)) {
-        $editorLocale = 'en';
-    }
-    ?>
-    @if ($editorLocale != 'en')
-        <script src="{{ asset('assets/plugins/ckeditor/translations/' . $editorLocale . '.js') }}"></script>
-    @endif
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            ClassicEditor.create(document.querySelector('#description'), {
-                language: '{{ $editorLocale }}',
-                toolbar: {
-                    items: [
-                        'undo',
-                        'redo',
-                        '|',
-                        'bold',
-                        'italic',
-                        '|',
-                        'fontColor',
-                        'fontBackgroundColor',
-                        '|',
-                        'bulletedList',
-                        'numberedList',
-                        'blockQuote',
-                        'alignment',
-                        '|',
-                        'insertTable',
-                        'link',
-                        '|',
-                        'heading',
-                        '|',
-                        'indent',
-                        'outdent',
-                        '|',
-                        'removeFormat'
-                    ]
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn',
-                        'tableRow',
-                        'mergeTableCells'
-                    ]
-                }
-            }).then( editor => {
-                window.editor = editor;
-            }).catch(error => {
-                console.error('Oops, something gone wrong!');
-                console.error('Please, report the following error in the https://github.com/ckeditor/ckeditor5 with the build id and the error stack trace:');
-                console.warn('Build id: v28nci2fjq9h-1yblopey8x43');
-                console.error(error);
-            });
-        });
-    </script>
-@endif
-
-{{-- Summernote --}}
-@if (config('settings.single.wysiwyg_editor') == 'summernote')
-    <script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
-    <?php
-    $editorLocale = '';
-    if (file_exists(public_path() . '/assets/plugins/summernote/lang/summernote-' . ietfLangTag(config('app.locale')) . '.js')) {
-        $editorLocale = ietfLangTag(config('app.locale'));
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/summernote/lang/summernote-' . ietfLangTag(config('lang.locale')) . '.js')) {
-            $editorLocale = ietfLangTag(config('lang.locale'));
-        }
-    }
-    if (empty($editorLocale)) {
-        if (file_exists(public_path() . '/assets/plugins/summernote/lang/summernote-' . strtolower(ietfLangTag(config('lang.locale'))) . '.js')) {
-            $editorLocale = strtolower(ietfLangTag(config('lang.locale')));
-        }
-    }
-    if (empty($editorLocale)) {
-        $editorLocale = 'en-US';
-    }
-    ?>
-    @if ($editorLocale != 'en-US')
-        <script src="{{ url('assets/plugins/summernote/lang/summernote-' . $editorLocale . '.js') }}" type="text/javascript"></script>
-    @endif
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#description').summernote({
-                lang: '{{ $editorLocale }}',
-                placeholder: '{{ t('Describe what makes your ad unique') }}...',
-                tabsize: 2,
-                height: 350,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link']]
-                ]
-            });
-        });
-    </script>
-@endif
-
 {{-- Simditor --}}
-@if (config('settings.single.wysiwyg_editor') == 'simditor')
+@if (config('settings.single.simditor_wysiwyg'))
     <script src="{{ asset('assets/plugins/simditor/scripts/mobilecheck.js') }}"></script>
     <script src="{{ asset('assets/plugins/simditor/scripts/module.js') }}"></script>
+    <script src="{{ asset('assets/plugins/simditor/scripts/uploader.js') }}"></script>
     <script src="{{ asset('assets/plugins/simditor/scripts/hotkeys.js') }}"></script>
-    <script src="{{ asset('assets/plugins/simditor/scripts/dompurify.js') }}"></script>
     <script src="{{ asset('assets/plugins/simditor/scripts/simditor.js') }}"></script>
-    <?php
-    $editorI18n = \Lang::get('simditor', [], config('app.locale'));
-    $editorI18nJson = '';
-    if (!empty($editorI18n)) {
-        $editorI18nJson = collect($editorI18n)->toJson();
-        // Escaped Unicode characters to HTML hex references. E.g. \u00e9 => &#x00e9;
-        $editorI18nJson = preg_replace('/\\\\u([a-fA-F0-9]{4})/ui', '&#x\\1;', $editorI18nJson);
-        // Convert HTML entities to their corresponding characters. E.g. &#x00e9; => é
-        $editorI18nJson = html_entity_decode($editorI18nJson);
-    }
-    ?>
     <script type="text/javascript">
-        @if (!empty($editorI18nJson))
-            Simditor.i18n = {'{{ config('app.locale') }}': <?php echo $editorI18nJson; ?>};
-        @endif
-        
-        <?php /* Fake Code Separator */ ?>
+        Simditor.i18n = {
+            '{{ config('app.locale') }}': {
+                'blockquote': '{!! t('simditor.blockquote') !!}',
+                'bold': '{!! t('simditor.bold') !!}',
+                'code': '{!! t('simditor.code') !!}',
+                'color': '{!! t('simditor.color') !!}',
+                'coloredText': '{!! t('simditor.coloredText') !!}',
+                'hr': '{!! t('simditor.hr') !!}',
+                'image': '{!! t('simditor.image') !!}',
+                'externalImage': '{!! t('simditor.externalImage') !!}',
+                'uploadImage': '{!! t('simditor.uploadImage') !!}',
+                'uploadFailed': '{!! t('simditor.uploadFailed') !!}',
+                'uploadError': '{!! t('simditor.uploadError') !!}',
+                'imageUrl': '{!! t('simditor.imageUrl') !!}',
+                'imageSize': '{!! t('simditor.imageSize') !!}',
+                'imageAlt': '{!! t('simditor.imageAlt') !!}',
+                'restoreImageSize': '{!! t('simditor.restoreImageSize') !!}',
+                'uploading': '{!! t('simditor.uploading') !!}',
+                'indent': '{!! t('simditor.indent') !!}',
+                'outdent': '{!! t('simditor.outdent') !!}',
+                'italic': '{!! t('simditor.italic') !!}',
+                'link': '{!! t('simditor.link') !!}',
+                'linkText': '{!! t('simditor.linkText') !!}',
+                'linkUrl': '{!! t('simditor.linkUrl') !!}',
+                'linkTarget': '{!! t('simditor.linkTarget') !!}',
+                'openLinkInCurrentWindow': '{!! t('simditor.openLinkInCurrentWindow') !!}',
+                'openLinkInNewWindow': '{!! t('simditor.openLinkInNewWindow') !!}',
+                'removeLink': '{!! t('simditor.removeLink') !!}',
+                'ol': '{!! t('simditor.ol') !!}',
+                'ul': '{!! t('simditor.ul') !!}',
+                'strikethrough': '{!! t('simditor.strikethrough') !!}',
+                'table': '{!! t('simditor.table') !!}',
+                'deleteRow': '{!! t('simditor.deleteRow') !!}',
+                'insertRowAbove': '{!! t('simditor.insertRowAbove') !!}',
+                'insertRowBelow': '{!! t('simditor.insertRowBelow') !!}',
+                'deleteColumn': '{!! t('simditor.deleteColumn') !!}',
+                'insertColumnLeft': '{!! t('simditor.insertColumnLeft') !!}',
+                'insertColumnRight': '{!! t('simditor.insertColumnRight') !!}',
+                'deleteTable': '{!! t('simditor.deleteTable') !!}',
+                'title': '{!! t('simditor.title') !!}',
+                'normalText': '{!! t('simditor.normalText') !!}',
+                'underline': '{!! t('simditor.underline') !!}',
+                'alignment': '{!! t('simditor.alignment') !!}',
+                'alignCenter': '{!! t('simditor.alignCenter') !!}',
+                'alignLeft': '{!! t('simditor.alignLeft') !!}',
+                'alignRight': '{!! t('simditor.alignRight') !!}',
+                'selectLanguage': '{!! t('simditor.selectLanguage') !!}',
+                'fontScale': '{!! t('simditor.fontScale') !!}',
+                'fontScaleXLarge': '{!! t('simditor.fontScaleXLarge') !!}',
+                'fontScaleLarge': '{!! t('simditor.fontScaleLarge') !!}',
+                'fontScaleNormal': '{!! t('simditor.fontScaleNormal') !!}',
+                'fontScaleSmall': '{!! t('simditor.fontScaleSmall') !!}',
+                'fontScaleXSmall': '{!! t('simditor.fontScaleXSmall') !!}'
+            }
+        };
         
         (function() {
             $(function() {
-                @if (!empty($editorI18nJson))
-                    Simditor.locale = '{{ config('app.locale') }}';
-                @endif
-                
                 var $preview, editor, mobileToolbar, toolbar, allowedTags;
-                
-                toolbar = ['bold','italic','underline','|','fontScale','color','|','ul','ol','blockquote','|','table','link','|','alignment','indent','outdent'];
+                Simditor.locale = '{{ config('app.locale') }}';
+                toolbar = ['bold','italic','underline','fontScale','color','|','ol','ul','blockquote','table','link'];
                 mobileToolbar = ["bold", "italic", "underline", "ul", "ol"];
                 if (mobilecheck()) {
                     toolbar = mobileToolbar;
                 }
                 allowedTags = ['br','span','a','img','b','strong','i','strike','u','font','p','ul','ol','li','blockquote','pre','h1','h2','h3','h4','hr','table'];
-                
-                /* Init */
                 editor = new Simditor({
                     textarea: $('#description'),
                     placeholder: '{{ t('Describe what makes your ad unique') }}...',
                     toolbar: toolbar,
-                    allowedTags: allowedTags,
-                    defaultImage: '{{ asset('assets/plugins/simditor/images/image.png') }}',
                     pasteImage: false,
-                    upload: false
+                    defaultImage: '{{ asset('assets/plugins/simditor/images/image.png') }}',
+                    upload: false,
+                    allowedTags: allowedTags
                 });
-                
                 $preview = $('#preview');
                 if ($preview.length > 0) {
                     return editor.on('valuechanged', function(e) {
@@ -210,3 +91,24 @@
         }).call(this);
     </script>
 @endif
+
+<?php
+/*
+{{-- CKEditor --}}
+{{-- Use this plugin by deactiving the "Simditor WYSIWYG Editor" --}}
+@if (!config('settings.single.simditor_wysiwyg') && config('settings.single.ckeditor_wysiwyg'))
+    <script src="{{ asset('vendor/admin/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('vendor/admin/ckeditor/adapters/jquery.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            CKEDITOR.config.toolbar = [
+                ['Bold','Italic','Underline','Strike','-','RemoveFormat','-','NumberedList','BulletedList','-','Undo','Redo','-','Table','-','Link','Unlink','Smiley','Source']
+            ];
+            $('textarea[name="description"].ckeditor').ckeditor({
+                language: '{{ strtolower(ietfLangTag(config('app.locale'))) }}'
+            });
+        });
+    </script>
+@endif
+*/
+?>

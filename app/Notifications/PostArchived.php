@@ -71,8 +71,7 @@ class PostArchived extends Notification implements ShouldQueue
 			]))
 			->line(trans('mail.post_archived_content_5'))
 			->line('<br>')
-			->line(trans('mail.post_archived_content_6'))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(trans('mail.post_archived_content_6'));
 	}
 	
 	public function toNexmo($notifiable)

@@ -18,7 +18,6 @@ namespace App\Helpers\Search;
 use App\Helpers\ArrayHelper;
 use App\Helpers\DBTool;
 use App\Helpers\Number;
-use App\Models\Field;
 use App\Models\PostType;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -28,18 +27,18 @@ use Larapen\LaravelDistance\Distance;
 
 class RawQueries
 {
-	protected static $cacheExpiration = 300; // 5mn (60s * 5)
+    protected static $cacheExpiration = 300; // 5mn (60s * 5)
 	
-	public $country;
-	public $lang;
-	public static $queryLength = 1;   // Minimum query characters
-	public static $distance = 100;    // km
-	public static $maxDistance = 500; // km
-	public $perPage = 12;
-	public $currentPage = 0;
-	protected $sqlCurrLimit;
-	protected $table = 'posts';
-	protected $searchable = [
+	public        $country;
+	public        $lang;
+	public static $queryLength  = 1;   // Minimum query characters
+	public static $distance     = 100; // km
+	public static $maxDistance  = 500; // km
+	public        $perPage      = 12;
+	public        $currentPage  = 0;
+	protected     $sqlCurrLimit;
+	protected     $table        = 'posts';
+	protected     $searchable   = [
 		'columns' => [
 			'tPost.title'       => 10,
 			'tPost.description' => 10,
@@ -48,11 +47,11 @@ class RawQueries
 			'lParent.name'      => 2, // Category Parent
 		],
 	];
-	protected $forceAverage = true; // Force relevance's average
-	protected $average = 1;         // Set relevance's average
+	protected     $forceAverage = true; // Force relevance's average
+	protected     $average      = 1;    // Set relevance's average
 	
 	// Pre-Search vars
-	public $city = null;
+	public $city  = null;
 	public $admin = null;
 	
 	// Ban this words in query search
@@ -60,7 +59,7 @@ class RawQueries
 	protected $banWords = [];
 	
 	// SQL statements building vars
-	protected $arrSql = [
+	protected $arrSql   = [
 		'select'  => [
 			'tPost.id',
 			'tPost.country_code',
@@ -118,7 +117,7 @@ class RawQueries
 		
 		// Distance (Max & Default distance)
 		self::$maxDistance = config('settings.listing.search_distance_max', 0);
-		self::$distance = config('settings.listing.search_distance_default', 0);
+		self::$distance    = config('settings.listing.search_distance_default', 0);
 		
 		// Posts per page
 		$this->perPage = (is_numeric(config('settings.listing.items_per_page'))) ? config('settings.listing.items_per_page') : $this->perPage;
@@ -195,8 +194,8 @@ class RawQueries
 		}
 		
 		// Pagination Init.
-		$this->currentPage = (request()->get('page') < 0) ? 0 : (int)request()->get('page');
-		$page = (request()->get('page') <= 1) ? 1 : (int)request()->get('page');
+		$this->currentPage  = (request()->get('page') < 0) ? 0 : (int)request()->get('page');
+		$page               = (request()->get('page') <= 1) ? 1 : (int)request()->get('page');
 		$this->sqlCurrLimit = ($page <= 1) ? 0 : $this->perPage * ($page - 1);
 		
 		// If Ad Type is filled, then check if the Ad Type exists
@@ -219,7 +218,7 @@ class RawQueries
 		
 		// If Ad Type is filled, then check if the Ad Type exists
 		if (!empty($postTypeId)) {
-			$cacheId = 'search.postType.' . $postTypeId . '.' . config('app.locale');
+			$cacheId  = 'search.postType.' . $postTypeId . '.' . config('app.locale');
 			$postType = Cache::remember($cacheId, self::$cacheExpiration, function () use ($postTypeId) {
 				return PostType::query()
 					->where('translation_of', $postTypeId)
@@ -328,7 +327,7 @@ class RawQueries
 				$wherePostType[] = 'tPost.post_type_id = ' . $postType->tid;
 				
 				// Count entries by 'post_type_id'
-				$sqlPostType = "SELECT COUNT(*) AS total FROM (" . $this->getSqlStatements($wherePostType) . ") AS x";
+				$sqlPostType   = "SELECT COUNT(*) AS total FROM (" . $this->getSqlStatements($wherePostType) . ") AS x";
 				$allByPostType = self::execute($sqlPostType, $this->bindings);
 				
 				$count[$postType->tid] = (isset($allByPostType[0])) ? $allByPostType[0]->total : 0;
@@ -382,7 +381,7 @@ class RawQueries
 		
 		// Set WHERE
 		$arrWhere = ((count($arrWhere) > 0) ? $arrWhere : $this->arrSql->where);
-		$where = '';
+		$where    = '';
 		if (count($arrWhere) > 0) {
 			foreach ($arrWhere as $value) {
 				if (trim($value) == '') {
@@ -545,7 +544,7 @@ class RawQueries
 			// Force average
 			$average = $this->average;
 		}
-		$this->arrSql->having[] = 'relevance >= :average';
+		$this->arrSql->having[]    = 'relevance >= :average';
 		$this->bindings['average'] = $average;
 		
 		//-- Group By
@@ -571,11 +570,11 @@ class RawQueries
 		// Category
 		if (empty($subCatId)) {
 			// $this->arrSql->where[] = 'tParent.id = :catId';
-			$this->arrSql->where[] = ':catId IN (tCategory.id, tParent.id)';
+			$this->arrSql->where[]   = ':catId IN (tCategory.id, tParent.id)';
 			$this->bindings['catId'] = $catId;
 		} // SubCategory
 		else {
-			$this->arrSql->where[] = 'tPost.category_id = :subCatId';
+			$this->arrSql->where[]      = 'tPost.category_id = :subCatId';
 			$this->bindings['subCatId'] = $subCatId;
 		}
 		
@@ -593,7 +592,7 @@ class RawQueries
 		if (trim($userId) == '') {
 			return $this;
 		}
-		$this->arrSql->where[] = 'tPost.user_id = :userId';
+		$this->arrSql->where[]    = 'tPost.user_id = :userId';
 		$this->bindings['userId'] = $userId;
 		
 		return $this;
@@ -630,13 +629,13 @@ class RawQueries
 	{
 		if (in_array(config('country.admin_type'), ['1', '2'])) {
 			// Get the admin. division table info
-			$adminType = config('country.admin_type');
-			$adminTable = 'subadmin' . $adminType;
+			$adminType       = config('country.admin_type');
+			$adminTable      = 'subadmin' . $adminType;
 			$adminForeignKey = 'subadmin' . $adminType . '_code';
 			
 			// Query
-			$this->arrSql->join[] = "INNER JOIN " . DBTool::table('cities') . " AS tCity ON tCity.id=tPost.city_id";
-			$this->arrSql->join[] = "INNER JOIN " . DBTool::table($adminTable) . " AS tAdmin ON tAdmin.code=tCity." . $adminForeignKey;
+			$this->arrSql->join[]  = "INNER JOIN " . DBTool::table('cities') . " AS tCity ON tCity.id=tPost.city_id";
+			$this->arrSql->join[]  = "INNER JOIN " . DBTool::table($adminTable) . " AS tAdmin ON tAdmin.code=tCity." . $adminForeignKey;
 			$this->arrSql->where[] = 'tAdmin.code = :adminCode';
 			
 			$this->bindings['adminCode'] = $adminCode;
@@ -682,12 +681,12 @@ class RawQueries
 		
 		$sql = Distance::select('tPost.lon', 'tPost.lat', ':longitude', ':latitude');
 		if ($sql) {
-			$this->arrSql->select[] = $sql;
-			$this->arrSql->having[] = Distance::having(self::$distance);
+			$this->arrSql->select[]  = $sql;
+			$this->arrSql->having[]  = Distance::having(self::$distance);
 			$this->arrSql->orderBy[] = Distance::orderBy('ASC');
 			
 			$this->bindings['longitude'] = $city->longitude;
-			$this->bindings['latitude'] = $city->latitude;
+			$this->bindings['latitude']  = $city->latitude;
 		} else {
 			return $this->setLocationByCityId($city->id);
 		}
@@ -708,7 +707,7 @@ class RawQueries
 			return $this;
 		}
 		
-		$this->arrSql->where[] = 'tPost.city_id = :cityId';
+		$this->arrSql->where[]    = 'tPost.city_id = :cityId';
 		$this->bindings['cityId'] = $cityId;
 		
 		return $this;
@@ -722,7 +721,7 @@ class RawQueries
 	public function setNonPrimaryFilters()
 	{
 		$parameters = request()->all();
-		if (!is_array($parameters) || empty($parameters)) {
+		if (count($parameters) == 0) {
 			return $this;
 		}
 		
@@ -737,151 +736,60 @@ class RawQueries
 			// Special parameters
 			$specParams = [];
 			if ($key == 'minPrice') { // Min. Price
+				// $this->arrSql->where[] = $this->filterParametersFields[$key] . ' >= ' . $value;
 				$this->arrSql->having[] = $this->filterParametersFields[$key] . ' >= ' . $value;
-				$specParams[] = $key;
+				$specParams[]           = $key;
 			}
 			if ($key == 'maxPrice') { // Max. Price
+				// $this->arrSql->where[] = $this->filterParametersFields[$key] .  ' <= ' . $value;
 				$this->arrSql->having[] = $this->filterParametersFields[$key] . ' <= ' . $value;
-				$specParams[] = $key;
+				$specParams[]           = $key;
 			}
 			if ($key == 'postedDate') { // Date
-				$this->arrSql->where[] = $this->filterParametersFields[$key] . ' BETWEEN DATE_SUB(NOW(), INTERVAL :postedDate DAY) AND NOW()';
+				$this->arrSql->where[]        = $this->filterParametersFields[$key] . ' BETWEEN DATE_SUB(NOW(), INTERVAL :postedDate DAY) AND NOW()';
 				$this->bindings['postedDate'] = $value;
-				$specParams[] = $key;
+				$specParams[]                 = $key;
 			}
-			
-			// Custom Fields
-			if ($key == 'cf') {
+			if ($key == 'cf') { // Custom Fields
 				if (is_array($value)) {
-					$aliasPrefix = 'pv'; // Alias prefix
 					$bindings = [];
 					foreach ($value as $fieldId => $postValue) {
-						// Get Field object
-						$field = Field::findTrans($fieldId);
-						if (empty($field)) {
-							continue;
-						}
-						
 						if (is_array($postValue)) {
-							// 'checkbox_multiple' field type
 							foreach ($postValue as $optionId => $optionValue) {
 								if (is_array($optionValue)) continue;
 								if (!is_array($optionValue) && trim($optionValue) == '') continue;
 								
-								$fieldAndOptionIds = $field->id . $optionId;
-								$alias = $aliasPrefix . (int)$fieldAndOptionIds; // (int) to prevent SQL injection attack
-								$where = '('
-									. $alias . '.field_id = :fieldId' . $fieldAndOptionIds
-									. ' AND ' . $alias . '.option_id = :optionId' . $fieldAndOptionIds
-									. ' AND ' . $alias . '.value LIKE :value' . $fieldAndOptionIds
+								$bindId = $fieldId . $optionId;
+								$alias  = 'av' . (int)$bindId; // (int) to prevent SQL injection attack
+								$where  = '('
+									. $alias . '.field_id = :fieldId' . $bindId
+									. ' AND ' . $alias . '.option_id = :optionId' . $bindId
+									. ' AND ' . $alias . '.value LIKE :value' . $bindId
 									. ')';
 								
-								$this->arrSql->join[] = "INNER JOIN " . DBTool::table('post_values')
-									. " AS " . $alias
-									. " ON tPost.id=" . $alias . ".post_id"
-									. " AND " . $where;
+								$this->arrSql->join[] = "INNER JOIN " . DBTool::table('post_values') . " AS " . $alias . " ON tPost.id=" . $alias . ".post_id AND " . $where;
 								
-								$bindings['fieldId' . $fieldAndOptionIds] = $field->id;
-								$bindings['optionId' . $fieldAndOptionIds] = $optionId;
-								$bindings['value' . $fieldAndOptionIds] = $optionValue;
+								$bindings['fieldId' . $bindId]  = $fieldId;
+								$bindings['optionId' . $bindId] = $optionId;
+								$bindings['value' . $bindId]    = $optionValue;
 								
 								$this->bindings += $bindings;
 							}
 						} else {
-							// Other fields
 							if (trim($postValue) == '') {
 								continue;
 							}
 							
-							// Date Value ('date', 'date_time')
-							if (in_array($field->type, ['date', 'date_time'])) {
-								$alias = $aliasPrefix . (int)$field->id; // (int) to prevent SQL injection attack
-								$where = '(' . $alias . '.field_id = :fieldId' . $field->id . ' AND DATE(' . $alias . '.value) = :value' . $field->id . ')';
-								
-								$sql = "INNER JOIN " . DBTool::table('post_values')
-									. " AS " . $alias
-									. " ON tPost.id=" . $alias . ".post_id"
-									. " AND " . $where;
-								
-								$postValue = date('Y-m-d', strtotime($postValue));
-								
-								$this->arrSql->join[] = $sql;
-								$bindings['fieldId' . $field->id] = $field->id;
-								$bindings['value' . $field->id] = $postValue;
-								
-								$this->bindings += $bindings;
-							}
+							$bindId = $fieldId;
+							$alias  = 'av' . (int)$bindId; // (int) to prevent SQL injection attack
+							$where  = '(' . $alias . '.field_id = :fieldId' . $bindId . ' AND ' . $alias . '.value LIKE :value' . $bindId . ')';
 							
-							// Dates Range Value ('date_range')
-							if ($field->type == 'date_range') {
-								/*
-								 * Date Range Format: YYYY/MM/DD - ZZZZ/YY/XX
-								 * SUBSTR(field, 1, 10) => YYYY/MM/DD
-								 * SUBSTR(field, 14, 23) => ZZZZ/YY/XX
-								 */
-								$alias = $aliasPrefix . (int)$field->id; // (int) to prevent SQL injection attack
-								$where = '('
-									. $alias . '.field_id = :fieldId' . $field->id
-									. ' AND DATE(SUBSTR(' . $alias . '.value, 1, 10)) >= :startDate' . $field->id
-									. ' AND DATE(SUBSTR(' . $alias . '.value, 14, 23)) <= :endDate' . $field->id
-									. ')';
-								
-								$sql = "INNER JOIN " . DBTool::table('post_values')
-									. " AS " . $alias
-									. " ON tPost.id=" . $alias . ".post_id"
-									. " AND " . $where;
-								
-								$tmp = explode('-', $postValue);
-								$tmp = array_map('trim', $tmp);
-								
-								if (!isset($tmp[0]) || !isset($tmp[1])) {
-									continue;
-								}
-								
-								$startDate = date('Y-m-d', strtotime($tmp[0]));
-								$endDate = date('Y-m-d', strtotime($tmp[1]));
-								
-								$this->arrSql->join[] = $sql;
-								$bindings['fieldId' . $field->id] = $field->id;
-								$bindings['startDate' . $field->id] = $startDate;
-								$bindings['endDate' . $field->id] = $endDate;
-								
-								$this->bindings += $bindings;
-							}
+							$this->arrSql->join[] = "INNER JOIN " . DBTool::table('post_values') . " AS " . $alias . " ON tPost.id=" . $alias . ".post_id AND " . $where;
 							
-							// Integer Value ('checkbox', 'select', 'radio', 'number')
-							if (in_array($field->type, ['checkbox', 'select', 'radio', 'number'])) {
-								$alias = $aliasPrefix . (int)$field->id; // (int) to prevent SQL injection attack
-								$where = '(' . $alias . '.field_id = :fieldId' . $field->id . ' AND ' . $alias . '.value LIKE :value' . $field->id . ')';
-								
-								$sql = "INNER JOIN " . DBTool::table('post_values')
-									. " AS " . $alias
-									. " ON tPost.id=" . $alias . ".post_id"
-									. " AND " . $where;
-								
-								$this->arrSql->join[] = $sql;
-								$bindings['fieldId' . $field->id] = $field->id;
-								$bindings['value' . $field->id] = $postValue;
-								
-								$this->bindings += $bindings;
-							}
+							$bindings['fieldId' . $bindId] = $fieldId;
+							$bindings['value' . $bindId]   = $postValue;
 							
-							// Text Value ('text', 'textarea', 'url')
-							if (in_array($field->type, ['text', 'textarea', 'url'])) {
-								$alias = $aliasPrefix . (int)$field->id; // (int) to prevent SQL injection attack
-								$where = '(' . $alias . '.field_id = :fieldId' . $field->id . ' AND ' . $alias . '.value LIKE :value' . $field->id . ')';
-								
-								$sql = "INNER JOIN " . DBTool::table('post_values')
-									. " AS " . $alias
-									. " ON tPost.id=" . $alias . ".post_id"
-									. " AND " . $where;
-								
-								$this->arrSql->join[] = $sql;
-								$bindings['fieldId' . $field->id] = $field->id;
-								$bindings['value' . $field->id] = '%' . $postValue . '%';
-								
-								$this->bindings += $bindings;
-							}
+							$this->bindings += $bindings;
 						}
 					}
 				}

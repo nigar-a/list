@@ -50,8 +50,7 @@ class FormSent extends Notification implements ShouldQueue
 			$mailMessage->line(t('Company Name') . ': ' . $this->msg->company_name);
 		}
 		
-		$mailMessage->line(nl2br($this->msg->message))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+		$mailMessage->line(nl2br($this->msg->message));
 		
 		return $mailMessage;
 	}

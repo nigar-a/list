@@ -13,12 +13,8 @@
 --}}
 @extends('layouts.master')
 
-@section('search')
-	@parent
-@endsection
-
 @section('content')
-	<div class="main-container" id="homepage">
+	<div class="main-container 1" id="homepage">
 		
 		@if (Session::has('flash_notification'))
 			@include('common.spacer')
@@ -31,7 +27,6 @@
 				</div>
 			</div>
 		@endif
-			
 		@if (isset($sections) and $sections->count() > 0)
 			@foreach($sections as $section)
 				@if (view()->exists($section->view))

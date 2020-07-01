@@ -19,10 +19,6 @@ return [
 	'All rights reserved.' => 'All rights reserved.',
 	
 	
-	// mail salutation
-	'footer_salutation' => 'Best Regards,<br>:appName',
-	
-	
 	// custom mail_footer (unused)
 	'mail_footer_content'            => 'Sell and buy near you. Simple, fast and efficient.',
 	

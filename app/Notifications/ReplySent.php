@@ -70,8 +70,7 @@ class ReplySent extends Notification implements ShouldQueue
 			->subject($this->msg->subject)
 			->greeting(trans('mail.reply_form_content_1'))
 			->line(trans('mail.reply_form_content_2', ['senderName' => $this->msg->from_name]))
-			->line(nl2br($this->msg->message))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(nl2br($this->msg->message));
 	}
 	
 	public function toNexmo($notifiable)

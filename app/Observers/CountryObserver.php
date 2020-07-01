@@ -59,34 +59,15 @@ class CountryObserver
 			}
 		}
 		
-		// Delete all SubAdmin1
-		$admin1s = SubAdmin1::countryOf($country->code);
-		if ($admin1s->count() > 0) {
-			foreach ($admin1s->cursor() as $admin1) {
-				$admin1->delete();
-			}
-		}
+		// Delete all Geonames entries
+		$deletedRows = SubAdmin1::countryOf($country->code)->delete();
+		$deletedRows = SubAdmin2::countryOf($country->code)->delete();
+		$deletedRows = City::countryOf($country->code)->delete();
 		
-		// Delete all SubAdmin2
-		$admin2s = SubAdmin2::countryOf($country->code);
-		if ($admin2s->count() > 0) {
-			foreach ($admin2s->cursor() as $admin2) {
-				$admin2->delete();
-			}
-		}
-		
-		// Delete all Cities
-		$cities = City::countryOf($country->code);
-		if ($cities->count() > 0) {
-			foreach ($cities->cursor() as $city) {
-				$city->delete();
-			}
-		}
-		
-		// Delete all Posts
-		$posts = Post::countryOf($country->code);
+		// Delete all Posts entries
+		$posts = Post::countryOf($country->code)->get();
 		if ($posts->count() > 0) {
-			foreach ($posts->cursor() as $post) {
+			foreach ($posts as $post) {
 				$post->delete();
 			}
 		}

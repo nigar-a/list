@@ -143,10 +143,6 @@ class TemporaryDirectory
 
     protected function deleteDirectory(string $path): bool
     {
-        if (is_link($path)) {
-            return unlink($path);
-        }
-
         if (! file_exists($path)) {
             return true;
         }

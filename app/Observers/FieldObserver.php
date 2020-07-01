@@ -41,9 +41,9 @@ class FieldObserver extends TranslatedModelObserver
 			// Check if field has options
 			if (in_array($field->type, $fieldTypesHavingOptions) && !in_array(request()->get('type'), $fieldTypesHavingOptions)) {
 				// Delete all the Custom Field's options
-				$options = FieldOption::where('field_id', $field->id);
+				$options = FieldOption::where('field_id', $field->id)->get();
 				if ($options->count() > 0) {
-					foreach ($options->cursor() as $option) {
+					foreach ($options as $option) {
 						$option->delete();
 					}
 				}

@@ -4,24 +4,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="replyTo{{ $conversation->id }}Label">
-					<?php
-					$headerTitle = t('Reply to');
-					$replyTo = '';
-					if (auth()->check()) {
-						if (auth()->user()->name != $conversation->from_name) {
-							$replyTo = $conversation->from_name;
-						} else {
-							if (isset($conversation->post->user) && !empty($conversation->post->user)) {
-								$replyTo = $conversation->post->user->name;
-							} else {
-								$replyTo = $conversation->post->contact_name;
-							}
-						}
-					}
-					$replyTo = $replyTo ?? '--';
-					$headerTitle = $headerTitle . ' "' . $replyTo . '"';
-					?>
-					{{ $headerTitle }}
+					{{ t('Reply to') . ' "' . $conversation->to_name . '"' }}
 				</h4>
 				
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

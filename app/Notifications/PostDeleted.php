@@ -61,8 +61,7 @@ class PostDeleted extends Notification implements ShouldQueue
 			]))
 			->line(trans('mail.post_deleted_content_3'))
 			->line('<br>')
-			->line(trans('mail.post_deleted_content_4'))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(trans('mail.post_deleted_content_4'));
 	}
 	
 	public function toNexmo($notifiable)

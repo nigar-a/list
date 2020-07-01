@@ -112,13 +112,11 @@ class PageController extends PanelController
 				'placeholder' => trans("admin::messages.Title"),
 			],
 		]);
-		$wysiwygEditor = config('settings.other.wysiwyg_editor');
-		$wysiwygEditorViewPath = '/views/vendor/admin/panel/fields/' . $wysiwygEditor . '.blade.php';
 		$this->xPanel->addField([
 			'name'       => 'content',
 			'label'      => trans("admin::messages.Content"),
-			'type'       => ($wysiwygEditor != 'none' && file_exists(resource_path() . $wysiwygEditorViewPath))
-				? $wysiwygEditor
+			'type'       => (config('settings.other.simditor_wysiwyg'))
+				? 'simditor'
 				: 'textarea',
 			'attributes' => [
 				'placeholder' => trans("admin::messages.Content"),

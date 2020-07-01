@@ -489,9 +489,7 @@ class Dispatcher implements DispatcherContract
             $listener->connection ?? null
         );
 
-        $queue = method_exists($listener, 'viaQueue')
-                    ? $listener->viaQueue()
-                    : $listener->queue ?? null;
+        $queue = $listener->queue ?? null;
 
         isset($listener->delay)
                     ? $connection->laterOn($queue, $listener->delay, $job)

@@ -41,7 +41,7 @@
 
 {{-- Salutation --}}
 @if (! empty($salutation))
-{!! $salutation !!}
+{{ $salutation }}
 @else
 @lang('mail.Regards'),<br>{{ config('app.name') }}
 @endif

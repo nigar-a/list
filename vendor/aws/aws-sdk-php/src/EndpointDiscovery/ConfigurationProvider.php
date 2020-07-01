@@ -76,7 +76,7 @@ class ConfigurationProvider extends AbstractConfigurationProvider
         $configProviders = [
             self::env(),
             self::ini(),
-            self::fallback($config)
+            self::fallback()
         ];
 
         $memo = self::memoize(
@@ -118,36 +118,16 @@ class ConfigurationProvider extends AbstractConfigurationProvider
     }
 
     /**
-     * Fallback config options when other sources are not set. Will check the
-     * service model for any endpoint discovery required operations, and enable
-     * endpoint discovery in that case. If no required operations found, will use
-     * the class default values.
+     * Fallback config options when other sources are not set.
      *
-     * @param array $config
      * @return callable
      */
-    public static function fallback($config = [])
+    public static function fallback()
     {
-        $enabled = self::DEFAULT_ENABLED;
-        if (!empty($config['api_provider'])
-            && !empty($config['service'])
-            && !empty($config['version'])
-        ) {
-            $provider = $config['api_provider'];
-            $apiData = $provider('api', $config['service'], $config['version']);
-            if (!empty($apiData['operations'])) {
-                foreach ($apiData['operations'] as $operation) {
-                    if (!empty($operation['endpointdiscovery']['required'])) {
-                        $enabled = true;
-                    }
-                }
-            }
-        }
-
-        return function () use ($enabled) {
+        return function () {
             return Promise\promise_for(
                 new Configuration(
-                    $enabled,
+                    self::DEFAULT_ENABLED,
                     self::DEFAULT_CACHE_LIMIT
                 )
             );

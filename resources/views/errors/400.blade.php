@@ -35,7 +35,7 @@
 								<h3 class="m-t-0"><i class="fa fa-warning"></i> Bad request.</h3>
 								<p>
 									<?php
-									$defaultErrorMessage = "Meanwhile, you may <a href='" . lurl('/') . "'>return to homepage</a>";
+									$defaultErrorMessage = "Meanwhile, you may <a href='" . url('admin') . "'>return to homepage</a>";
 									?>
 									{!! isset($exception) ? ($exception->getMessage() ? $exception->getMessage() : $defaultErrorMessage) : $defaultErrorMessage !!}
 								</p>

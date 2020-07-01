@@ -46,18 +46,18 @@ class HomeController extends FrontController
 	 */
 	public function index()
 	{
-		$data = [];
+		$data        = [];
 		$countryCode = config('country.code');
 		
 		// Get all homepage sections
-		$cacheId = $countryCode . '.homeSections';
+		$cacheId          = $countryCode . '.homeSections';
 		$data['sections'] = Cache::remember($cacheId, $this->cacheExpiration, function () use ($countryCode) {
 			$sections = collect([]);
 			
 			// Check if the Domain Mapping plugin is available
 			if (config('plugins.domainmapping.installed')) {
 				try {
-					$sections = \App\Plugins\domainmapping\app\Models\DomainHomeSection::where('country_code', $countryCode)->orderBy('lft')->get();
+					$sections = \App\Plugins\domainmapping\app\Models\DomainHomeSection::where('country_code', $countryCode)->where('active',1)->orderBy('lft')->get();
 				} catch (\Exception $e) {
 				}
 			}
@@ -70,7 +70,6 @@ class HomeController extends FrontController
 			return $sections;
 		});
 		
-		$searchFormOptions = [];
 		if ($data['sections']->count() > 0) {
 			foreach ($data['sections'] as $section) {
 				// Clear method name
@@ -88,11 +87,6 @@ class HomeController extends FrontController
 					} else {
 						$this->{$method}();
 					}
-					
-					// Get the search area background image
-					if ($method == 'getSearchForm') {
-						$searchFormOptions = $section->value;
-					}
 				} catch (\Exception $e) {
 					flash($e->getMessage())->error();
 					continue;
@@ -101,7 +95,7 @@ class HomeController extends FrontController
 		}
 		
 		// Get SEO
-		$this->setSeo($searchFormOptions);
+		$this->setSeo();
 		
 		return view('home.index', $data);
 	}
@@ -133,7 +127,7 @@ class HomeController extends FrontController
 		$cacheExpiration = $this->getCacheExpirationTime($value);
 		
 		// Modal - States Collection
-		$cacheId = config('country.code') . '.home.getLocations.modalAdmins';
+		$cacheId     = config('country.code') . '.home.getLocations.modalAdmins';
 		$modalAdmins = Cache::remember($cacheId, $cacheExpiration, function () {
 			return SubAdmin1::currentCountry()->orderBy('name')->get(['code', 'name'])->keyBy('code');
 		});
@@ -141,10 +135,10 @@ class HomeController extends FrontController
 		
 		// Get cities
 		$cacheId = config('country.code') . 'home.getLocations.cities';
-		$cities = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems) {
+		$cities  = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems) {
 			return City::currentCountry()->take($maxItems)->orderBy('population', 'DESC')->orderBy('name')->get();
 		});
-		$cities = collect($cities)->push(ArrayHelper::toObject([
+		$cities  = collect($cities)->push(ArrayHelper::toObject([
 			'id'             => 999999999,
 			'name'           => t('More cities') . ' &raquo;',
 			'subadmin1_code' => 0,
@@ -161,7 +155,7 @@ class HomeController extends FrontController
 		// Chunk
 		$maxRowsPerCol = round($cities->count() / $numberOfCols, 0); // PHP_ROUND_HALF_EVEN
 		$maxRowsPerCol = ($maxRowsPerCol > 0) ? $maxRowsPerCol : 1;  // Fix array_chunk with 0
-		$cities = $cities->chunk($maxRowsPerCol);
+		$cities        = $cities->chunk($maxRowsPerCol);
 		
 		view()->share('cities', $cities);
 		view()->share('citiesOptions', $value);
@@ -195,7 +189,7 @@ class HomeController extends FrontController
 		
 		// Get featured posts
 		$cacheId = config('country.code') . '.home.getPosts.' . $type;
-		$posts = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems, $type) {
+		$posts   = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems, $type) {
 			return Post::getLatestOrSponsored($maxItems, $type);
 		});
 		
@@ -203,7 +197,7 @@ class HomeController extends FrontController
 			if ($orderBy == 'random') {
 				$posts = ArrayHelper::shuffleAssoc($posts);
 			}
-			$attr = ['countryCode' => config('country.icode')];
+			$attr      = ['countryCode' => config('country.icode')];
 			$sponsored = [
 				'title' => t('Home - Sponsored Ads'),
 				'link'  => lurl(trans('routes.v-search', $attr), $attr),
@@ -242,7 +236,7 @@ class HomeController extends FrontController
 		
 		// Get latest posts
 		$cacheId = config('country.code') . '.home.getPosts.' . $type;
-		$posts = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems, $type) {
+		$posts   = Cache::remember($cacheId, $cacheExpiration, function () use ($maxItems, $type) {
 			return Post::getLatestOrSponsored($maxItems, $type);
 		});
 		
@@ -286,19 +280,37 @@ class HomeController extends FrontController
 			$categories = $subCategories = $categories->groupBy('parent_id');
 			
 			if ($categories->has(0)) {
-				$categories = $categories->get(0)->take($maxItems);
+				$categories    = $categories->get(0)->take($maxItems);
 				$subCategories = $subCategories->forget(0);
-				
+			/*	
+				$sorted = $subCategories->sortByDesc(function ($value, $key) {
+					if($value->posts->count() > 0)
+						return $value->childrenPosts->count();
+					else return 0;
+					
+				});*/
+
+				$filteredSub = [];
+				foreach ($categories as $cat_key => $cat) {
+					$iterationCatId = $cat->id;
+					$filtered = $subCategories->filter(function ($value, $key) use ($iterationCatId) {
+						return preg_match("/(^|,)".$iterationCatId."(,|$)/",$key);
+					});
+					$filteredSub[$iterationCatId] = $filtered;
+				}
+
 				$maxRowsPerCol = round($categories->count() / $numberOfCols, 0, PHP_ROUND_HALF_EVEN);
 				$maxRowsPerCol = ($maxRowsPerCol > 0) ? $maxRowsPerCol : 1;
-				$categories = $categories->chunk($maxRowsPerCol);
+				$categories    = $categories->chunk($maxRowsPerCol);
 			} else {
-				$categories = collect([]);
+				$categories    = collect([]);
 				$subCategories = collect([]);
 			}
 			
 			view()->share('categories', $categories);
 			view()->share('subCategories', $subCategories);
+			view()->share('filteredSub', $filteredSub);
+
 			
 		} else {
 			
@@ -312,7 +324,7 @@ class HomeController extends FrontController
 				// $maxRowsPerCol = round($categories->count() / $numberOfCols, 0); // PHP_ROUND_HALF_EVEN
 				$maxRowsPerCol = ceil($categories->count() / $numberOfCols);
 				$maxRowsPerCol = ($maxRowsPerCol > 0) ? $maxRowsPerCol : 1; // Fix array_chunk with 0
-				$categories = $categories->chunk($maxRowsPerCol);
+				$categories    = $categories->chunk($maxRowsPerCol);
 			}
 			
 			view()->share('categories', $categories);
@@ -344,14 +356,12 @@ class HomeController extends FrontController
 	
 	/**
 	 * Set SEO information
-	 *
-	 * @param array $searchFormOptions
 	 */
-	protected function setSeo($searchFormOptions = [])
+	protected function setSeo()
 	{
-		$title = getMetaTag('title', 'home');
+		$title       = getMetaTag('title', 'home');
 		$description = getMetaTag('description', 'home');
-		$keywords = getMetaTag('keywords', 'home');
+		$keywords    = getMetaTag('keywords', 'home');
 		
 		// Meta Tags
 		MetaTag::set('title', $title);
@@ -360,26 +370,6 @@ class HomeController extends FrontController
 		
 		// Open Graph
 		$this->og->title($title)->description($description);
-		$backgroundImage = '';
-		if (!empty(config('country.background_image'))) {
-			if (isset($this->disk) && $this->disk->exists(config('country.background_image'))) {
-				$backgroundImage = config('country.background_image');
-			}
-		}
-		if (empty($backgroundImage)) {
-			if (isset($searchFormOptions['background_image']) && !empty($searchFormOptions['background_image'])) {
-				$backgroundImage = $searchFormOptions['background_image'];
-			}
-		}
-		if (!empty($backgroundImage)) {
-			if ($this->og->has('image')) {
-				$this->og->forget('image')->forget('image:width')->forget('image:height');
-			}
-			$this->og->image(imgUrl($backgroundImage, 'big'), [
-				'width'  => 600,
-				'height' => 600,
-			]);
-		}
 		view()->share('og', $this->og);
 	}
 	

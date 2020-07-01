@@ -2,10 +2,6 @@
 
 All notable changes to `laravel-feed` will be documented in this file
 
-## 2.7.0 - 2020-06-12
-
-- allow multiple categories
-
 ## 2.6.2 - 2020-04-23
 
 - fix null subject (#124)

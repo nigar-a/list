@@ -430,7 +430,7 @@ trait LocalizationTrait
 		
 		$cacheId = 'getSubCategoryBySlug.' . config('app.locale') . '.parent.' . $parentTid . '.' . $slug;
 		$tmpSubCat = Cache::remember($cacheId, self::$cacheExpiration, function () use ($parentTid, $slug) {
-			return Category::transIn(config('app.locale'))->where('parent_id', $parentTid)->where('slug', '=', $slug)->first();
+			return Category::transIn(config('app.locale'))->whereRaw('FIND_IN_SET('.$parentTid.',parent_id)')->where('slug', '=', $slug)->first();
 		});
 		if (!empty($tmpSubCat)) {
 			$cacheId = 'getSubCategoryBySlug.' . $locale . '.' . $tmpSubCat->tid;
