@@ -1,0 +1,10 @@
+[08-Jun-2020 15:56:48 UTC] PHP Fatal error:  'break' not in the 'loop' or 'switch' context in /hostimul/daltonik/public_html/app/Http/Controllers/HomeController.php on line 293
+[08-Jun-2020 15:56:49 UTC] PHP Fatal error:  'break' not in the 'loop' or 'switch' context in /hostimul/daltonik/public_html/app/Http/Controllers/HomeController.php on line 293
+[08-Jun-2020 18:45:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function App\Exceptions\appInstallFilesExist() in /hostimul/daltonik/public_html/app/Exceptions/Handler.php:364
+Stack trace:
+#0 /hostimul/daltonik/public_html/app/Exceptions/Handler.php(81): App\Exceptions\Handler->getLanguage()
+#1 [internal function]: App\Exceptions\Handler->__construct(Object(Illuminate\Foundation\Application))
+#2 /hostimul/daltonik/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(845): ReflectionClass->newInstanceArgs(Array)
+#3 /hostimul/daltonik/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(687): Illuminate\Container\Container->build('App\\Exceptions\\...')
+#4 /hostimul/daltonik/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(796): Illuminate\Container\Container->resolve('App\\Exceptions\\...', Array, false)
+#5 /hostimul/daltonik/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(265): Illuminate\Foundation\Application->resolve('App\\Exceptions in /hostimul/daltonik/public_html/app/Exceptions/Handler.php on line 364

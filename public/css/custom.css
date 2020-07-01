@@ -1,0 +1,172 @@
+/*
+ * LaraClassified - Classified Ads Web Application
+ * Copyright (c) BedigitCom. All Rights Reserved
+ *
+ * Website: http://www.bedigit.com
+ *
+ * LICENSE
+ * -------
+ * This software is furnished under a license and may be used and copied
+ * only in accordance with the terms of such license and with the inclusion
+ * of the above copyright notice. If you Purchased from Codecanyon,
+ * Please read the full License from here - http://codecanyon.net/licenses/standard
+ */
+
+/* Your custom CSS here... */
+
+.navbar.navbar-site {
+    border-bottom-color: #e96d77 !important;
+    background-color: #3f475f!important;
+    border-bottom-width: 3px !important;
+}
+
+.search-col .btn-primary{
+	background-color: #fff!important; 
+}
+.search-col .btn-primary i{
+	color: #3f475f!important;
+	text-shadow: none;
+}
+
+.navbar.navbar-light .navbar-nav>li .nav-link:not(.btn), .navbar.navbar-light .navbar-nav>li>a:not(.btn), .navbar.navbar-site .navbar-nav>li .nav-link:not(.btn), .navbar.navbar-site .navbar-nav>li>a:not(.btn){
+	color: #fff;
+}
+a.btn-add-listing, button.btn-add-listing, li.postadd.nav-item>a.btn-add-listing{
+	border-color: #e96d77 !important;
+	background: #e96d77 !important;
+	color: #fff!important;
+}
+a.btn-add-listing:hover,
+li.postadd.nav-item>a.btn-add-listing:hover{
+	border-color: #e96d77 !important;
+}
+
+.latest-list{
+	border: 0;
+}
+
+.latest-list .box-title{
+	background-color: transparent;
+}
+
+.latest-list .category-list.make-grid .item-list{
+	border: 0;
+}
+
+.latest-list .make-grid .item-list {
+    width: 20% !important;
+}
+
+.latest-list .reviews-widget > span.rating-label{
+	font-size: 12px;
+}
+
+.latest-list h4.item-price {
+    color: #292b2c;
+    float: left;
+    font-weight: bold;
+}
+
+.latest-list .reviews-widget > span.icon-star, 
+.latest-list .reviews-widget > span.icon-star-empty{
+	font-size: 12px
+}
+
+.latest-list .reviews-widget{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.item-list span.date,
+.item-list span.category{
+	display: flex;
+    white-space: nowrap;
+}
+
+.latest-list .make-grid .item-list .add-desc-box {
+    padding: 0;
+}
+
+a.info-link{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline;
+    display: block;
+    max-width: 100%;
+    float: left;
+}
+
+.latest-list .item-list{
+	padding: 5px;
+}
+
+.latest-list{
+	padding: 0 25px;
+}
+
+.page-info-lite h5,.page-info-lite .iconbox-wrap-text {
+    color: #3f475f;
+}
+
+.page-info-lite .iconbox-wrap-icon .icon{
+	color: #e96d77;
+}
+
+.cat-list h3, .cat-list h3 a{
+	color: #3f475f;
+}
+
+a{
+	color: #3f475f;
+}
+
+.cat-list ul li {
+    line-height: 1.6;
+}
+
+.page-info-lite{
+	background-color: transparent;
+}
+
+.cat-sidebar{
+	border: 0;
+}
+
+.row-featured-category .list-categories-children h3 {
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.row-featured-category .list-categories-children h3 img{
+	width: 20px;
+    height: 20px;
+    object-fit: contain;
+    margin-right: 5px;
+}
+
+.more-link{
+	border: 0;
+}
+
+.navbar-collapse>.dtable{
+	width: 50%;
+	margin-left: 8%;
+}
+.search-row .search-col:first-child .form-control {
+    border-radius: 0!important;
+}
+
+.search-row .search-col .form-control, .search-row button.btn-search, .search-row-wrapper .form-control, .search-row-wrapper button.btn {
+    height: 35px;
+}
+.search-row button.btn-search{
+	padding: 0;
+}
+.search-row .search-col .form-control{
+	padding-left: 20px
+}
