@@ -90,8 +90,8 @@ class PostsController extends AccountBaseController
 				}
 				
 				if ($post->archived != 1) {
-					$post->archived          = 1;
-					$post->archived_at       = Date::now();
+					$post->archived = 1;
+					$post->archived_at = Date::now();
 					$post->archived_manually = 1;
 					$post->save();
 					
@@ -128,7 +128,7 @@ class PostsController extends AccountBaseController
 			return back();
 		}
 		
-		$data          = [];
+		$data = [];
 		$data['posts'] = $this->myPosts->paginate($this->perPage);
 		
 		// Meta Tags
@@ -160,11 +160,11 @@ class PostsController extends AccountBaseController
 				$postUrl = UrlGen::post($post);
 				
 				if ($post->archived != 0) {
-					$post->archived              = 0;
-					$post->archived_at           = null;
+					$post->archived = 0;
+					$post->archived_at = null;
 					$post->deletion_mail_sent_at = null;
 					if ($post->archived_manually != 1) {
-						$post->created_at        = Date::now();
+						$post->created_at = Date::now();
 						$post->archived_manually = 0;
 					}
 					$post->save();
@@ -195,7 +195,7 @@ class PostsController extends AccountBaseController
 			return redirect(config('app.locale') . '/account/' . $pagePath);
 		}
 		
-		$data          = [];
+		$data = [];
 		$data['posts'] = $this->archivedPosts->paginate($this->perPage);
 		
 		// Meta Tags
@@ -212,7 +212,7 @@ class PostsController extends AccountBaseController
 	 */
 	public function getFavouritePosts()
 	{
-		$data          = [];
+		$data = [];
 		$data['posts'] = $this->favouritePosts->paginate($this->perPage);
 		
 		// Meta Tags
@@ -227,7 +227,7 @@ class PostsController extends AccountBaseController
 	 */
 	public function getPendingApprovalPosts()
 	{
-		$data          = [];
+		$data = [];
 		$data['posts'] = $this->pendingPosts->paginate($this->perPage);
 		
 		// Meta Tags
@@ -246,7 +246,7 @@ class PostsController extends AccountBaseController
 		$data = [];
 		
 		// Get QueryString
-		$tmp         = parse_url(url(request()->getRequestUri()));
+		$tmp = parse_url(url(request()->getRequestUri()));
 		$queryString = (isset($tmp['query']) ? $tmp['query'] : 'false');
 		$queryString = preg_replace('|\&pag[^=]*=[0-9]*|i', '', $queryString);
 		
@@ -261,12 +261,22 @@ class PostsController extends AccountBaseController
 			->orderBy('created_at', 'DESC')
 			->simplePaginate($this->perPage, ['*'], 'pag');
 		
-		if (collect($savedSearch->getCollection())->keyBy('query')->keys()->contains($queryString)) {
+		if (collect($savedSearch->getCollection())
+			->keyBy('query')
+			->keys()
+			->contains(function ($value, $key) use ($queryString) {
+				$qs1 = preg_replace('/(\s|%20)/ui', '+', $queryString);
+				$qs2 = preg_replace('/(\s|\+)/ui', '%20', $queryString);
+				$qs3 = preg_replace('/(\+|%20)/ui', ' ', $queryString);
+				
+				return ($value == $qs1 || $value == $qs2 || $value == $qs3);
+			})) {
+			
 			parse_str($queryString, $queryArray);
 			
 			// QueryString vars
-			$cityId    = isset($queryArray['l']) ? $queryArray['l'] : null;
-			$location  = isset($queryArray['location']) ? $queryArray['location'] : null;
+			$cityId = isset($queryArray['l']) ? $queryArray['l'] : null;
+			$location = isset($queryArray['location']) ? $queryArray['location'] : null;
 			$adminName = (isset($queryArray['r']) && !isset($queryArray['l'])) ? $queryArray['r'] : null;
 			
 			// Pre-Search
@@ -278,8 +288,8 @@ class PostsController extends AccountBaseController
 			if ($savedSearch->getCollection()->count() > 0) {
 				// Search
 				$searchClass = config('larapen.core.searchClass');
-				$search      = new $searchClass($preSearch);
-				$data        = $search->fetch();
+				$search = new $searchClass($preSearch);
+				$data = $search->fetch();
 			}
 		}
 		$data['savedSearch'] = $savedSearch;

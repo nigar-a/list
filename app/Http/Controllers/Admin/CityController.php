@@ -362,6 +362,7 @@ class CityController extends PanelController
 	
 	/**
 	 * Increment new cities IDs
+	 * NOTE: Obsolete if the ID column is auto-incremented on the MySQL side
 	 *
 	 * @return int
 	 */
@@ -383,7 +384,7 @@ class CityController extends PanelController
 	
 	private function subAdmin1s()
 	{
-		// Get the Administratives Divisions
+		// Get the Administrative Divisions
 		$admins = SubAdmin1::where('country_code', $this->countryCode)->get();
 		
 		$tab = [];
@@ -406,7 +407,7 @@ class CityController extends PanelController
 			}
 		}
 		
-		// Get the Administratives Divisions
+		// Get the Administrative Divisions
 		$admins = SubAdmin2::where('country_code', $this->countryCode)->where('subadmin1_code', $this->admin1Code)->get();
 		
 		$tab = [];

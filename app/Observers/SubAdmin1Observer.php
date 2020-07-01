@@ -31,17 +31,17 @@ class SubAdmin1Observer
 	public function deleting(SubAdmin1 $admin)
 	{
 		// Delete all the Admin's SubAdmin2
-		$admin2s = SubAdmin2::countryOf($admin->country_code)->where('subadmin1_code', $admin->code)->get();
+		$admin2s = SubAdmin2::countryOf($admin->country_code)->where('subadmin1_code', $admin->code);
 		if ($admin2s->count() > 0) {
-			foreach ($admin2s as $admin2) {
+			foreach ($admin2s->cursor() as $admin2) {
 				$admin2->delete();
 			}
 		}
 		
 		// Delete all the Admin's Cities
-		$cities = City::countryOf($admin->country_code)->where('subadmin1_code', $admin->code)->get();
+		$cities = City::countryOf($admin->country_code)->where('subadmin1_code', $admin->code);
 		if ($cities->count() > 0) {
-			foreach ($cities as $city) {
+			foreach ($cities->cursor() as $city) {
 				$city->delete();
 			}
 		}

@@ -93,7 +93,8 @@ class Payment extends BaseModel
 	{
 		$out = '#' . $this->post_id;
 		if ($this->post) {
-			$postUrl = url(UrlGen::postUri($this->post));
+			// $postUrl = url(UrlGen::postUri($this->post));
+			$postUrl = localUrl($this->post->country_code, UrlGen::postPath($this->post));
 			$out .= ' | ';
 			$out .= '<a href="' . $postUrl . '" target="_blank">' . $this->post->title . '</a>';
 			

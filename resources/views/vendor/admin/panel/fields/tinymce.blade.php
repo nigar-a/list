@@ -26,15 +26,32 @@
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
     <!-- include tinymce js-->
-    <script src="{{ asset('vendor/admin/tinymce/tinymce.min.js') }}"></script>
-    {{-- <script src="{{ asset('vendor/admin/tinymce/jquery.tinymce.min.js') }}"></script> --}}
-
+    <script src="{{ asset('assets/plugins/tinymce/tinymce.min.js') }}"></script>
+    <?php
+    $editorI18n = \Lang::get('tinymce', [], config('app.locale'));
+    $editorI18nJson = '';
+    if (!empty($editorI18n)) {
+        $editorI18nJson = collect($editorI18n)->toJson();
+        // Escaped Unicode characters to HTML hex references. E.g. \u00e9 => &#x00e9;
+        $editorI18nJson = preg_replace('/\\\\u([a-fA-F0-9]{4})/ui', '&#x\\1;', $editorI18nJson);
+        // Convert HTML entities to their corresponding characters. E.g. &#x00e9; => é
+        $editorI18nJson = html_entity_decode($editorI18nJson);
+    }
+    ?>
     <script type="text/javascript">
     tinymce.init({
         selector: "textarea.tinymce",
-        skin: "dick-light",
-        plugins: "link,anchor"
+        language: '{{ (!empty($editorI18nJson)) ? config('app.locale') : 'en' }}',
+        directionality: '{{ (config('lang.direction') == 'rtl') ? 'rtl' : 'ltr' }}',
+        height: 400,
+        menubar: false,
+        statusbar: false,
+        plugins: 'lists link table code',
+        toolbar: 'undo redo | bold italic underline | forecolor backcolor | bullist numlist blockquote table | link unlink | alignleft aligncenter alignright | outdent indent | fontsizeselect | code',
      });
+    @if (!empty($editorI18nJson))
+        tinymce.addI18n('{{ config('app.locale') }}', <?php echo $editorI18nJson; ?>);
+    @endif
     </script>
     @endpush
 

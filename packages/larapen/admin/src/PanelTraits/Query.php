@@ -26,12 +26,7 @@ trait Query
 	 */
 	public function addClause($function)
 	{
-		// $this->query->where
 		return call_user_func_array([$this->query, $function], array_slice(func_get_args(), 1, 3));
-	}
-
-	public function whereFindInSet($value, $set){
-		 return $this->query->whereRaw('FIND_IN_SET('.$value.','.$set.')');
 	}
 	
 	/**

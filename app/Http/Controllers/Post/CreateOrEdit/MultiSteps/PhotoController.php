@@ -194,6 +194,11 @@ class PhotoController extends FrontController
 		$countExistingPictures = Picture::where('post_id', $post->id)->count();
 		$picturesLimit         = (int)config('settings.single.pictures_limit', 5) - $countExistingPictures;
 		
+		// Get pictures initial position
+		$latestPosition = Picture::where('post_id', $post->id)->orderBy('position', 'DESC')->first();
+		$initialPosition = (!empty($latestPosition) && (int)$latestPosition->position > 0) ? (int)$latestPosition->position : 0;
+		$initialPosition = ($countExistingPictures >= $initialPosition) ? $countExistingPictures : $initialPosition;
+		
 		// Save all pictures
 		$pictures = [];
 		$files    = $request->file('pictures');
@@ -205,7 +210,7 @@ class PhotoController extends FrontController
 				
 				// Delete old file if new file has uploaded
 				// Check if current Post have a pictures
-				$picturePosition = (int)$key + 1;
+				$picturePosition = $initialPosition + (int)$key + 1;
 				$picture         = Picture::where('post_id', $post->id)->where('id', $key)->first();
 				if (!empty($picture)) {
 					$picturePosition = $picture->position;

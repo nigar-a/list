@@ -32,9 +32,9 @@ class PackageObserver extends TranslatedModelObserver
 		parent::deleting($package);
 		
 		// Delete all payment entries in database
-		$payments = Payment::where('package_id', $package->id)->get();
+		$payments = Payment::where('package_id', $package->id);
 		if ($payments->count() > 0) {
-			foreach ($payments as $payment) {
+			foreach ($payments->cursor() as $payment) {
 				$payment->delete();
 			}
 		}

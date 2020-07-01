@@ -298,8 +298,8 @@ class Setting extends BaseModel
 				if (!isset($value['auto_registration'])) {
 					$value['auto_registration'] = '0';
 				}
-				if (!isset($value['simditor_wysiwyg'])) {
-					$value['simditor_wysiwyg'] = '1';
+				if (!isset($value['wysiwyg_editor'])) {
+					$value['wysiwyg_editor'] = 'tinymce';
 				}
 				if (!isset($value['similar_posts'])) {
 					$value['similar_posts'] = '1';
@@ -573,8 +573,8 @@ class Setting extends BaseModel
 				if (!isset($value['timer_new_messages_checking'])) {
 					$value['timer_new_messages_checking'] = 60000;
 				}
-				if (!isset($value['simditor_wysiwyg'])) {
-					$value['simditor_wysiwyg'] = '1';
+				if (!isset($value['wysiwyg_editor'])) {
+					$value['wysiwyg_editor'] = 'tinymce';
 				}
 				if (!isset($value['cookie_expiration'])) {
 					$value['cookie_expiration'] = '86400';
@@ -721,7 +721,7 @@ class Setting extends BaseModel
 					$value['guests_can_post_ads'] = '1';
 					$value['guests_can_contact_ads_authors'] = '1';
 					$value['auto_registration'] = '0';
-					$value['simditor_wysiwyg'] = '1';
+					$value['wysiwyg_editor'] = 'tinymce';
 					$value['similar_posts'] = '1';
 				}
 				if ($this->key == 'mail') {
@@ -822,7 +822,7 @@ class Setting extends BaseModel
 					$value['cookie_consent_enabled'] = '0';
 					$value['show_tips_messages'] = '1';
 					$value['timer_new_messages_checking'] = 60000;
-					$value['simditor_wysiwyg'] = '1';
+					$value['wysiwyg_editor'] = 'tinymce';
 					$value['cookie_expiration'] = '86400';
 				}
 				if ($this->key == 'cron') {
@@ -1272,7 +1272,7 @@ class Setting extends BaseModel
 	
 	{"name":"edition_sep","type":"custom_html","value":"edition_sep_value"},
 	{"name":"wysiwyg_editor_title","type":"custom_html","value":"wysiwyg_editor_title_value"},
-	{"name":"simditor_wysiwyg","label":"simditor_wysiwyg_label","type":"checkbox","hint":"simditor_wysiwyg_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
+	{"name":"wysiwyg_editor","label":"wysiwyg_editor_label","type":"select2_from_array","options":{"none":"' . trans('admin::messages.wysiwyg_editor_none') . '","tinymce":"' . trans('admin::messages.wysiwyg_editor_tinymce') . '","ckeditor":"' . trans('admin::messages.wysiwyg_editor_ckeditor') . '","summernote":"' . trans('admin::messages.wysiwyg_editor_summernote') . '","simditor":"' . trans('admin::messages.wysiwyg_editor_simditor') . '"},"hint":"wysiwyg_editor_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
 	{"name":"remove_url_title","type":"custom_html","value":"remove_url_title_value"},
 	{"name":"remove_url_before","label":"remove_element_before_label","type":"checkbox","hint":"remove_element_before_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
 	{"name":"remove_url_after","label":"remove_element_after_label","type":"checkbox","hint":"remove_element_after_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
@@ -1597,7 +1597,7 @@ class Setting extends BaseModel
 	{"name":"timer_new_messages_checking","label":"Timer for New Messages Checking","type":"text","hint":"Timer (in milliseconds). 60000 = 60 seconds. 0 to disable the auto-checking feature.","wrapperAttributes":{"class":"form-group col-md-6"}},
 	
 	{"name":"separator_4","type":"custom_html","value":"textarea_editor_h3"},
-	{"name":"simditor_wysiwyg","label":"simditor_wysiwyg_label","type":"checkbox","hint":"simditor_wysiwyg_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
+	{"name":"wysiwyg_editor","label":"wysiwyg_editor_label","type":"select2_from_array","options":{"none":"' . trans('admin::messages.wysiwyg_editor_none') . '","tinymce":"' . trans('admin::messages.wysiwyg_editor_tinymce') . '","ckeditor":"' . trans('admin::messages.wysiwyg_editor_ckeditor') . '","summernote":"' . trans('admin::messages.wysiwyg_editor_summernote') . '","simditor":"' . trans('admin::messages.wysiwyg_editor_simditor') . '"},"hint":"wysiwyg_editor_hint","wrapperAttributes":{"class":"form-group col-md-6"}},
 	
 	{"name":"separator_5","type":"custom_html","value":"<h3>Mobile Apps URLs</h3>"},
 	{"name":"ios_app_url","label":"App Store","type":"text","hint":"Available on the App Store with the given URL","wrapperAttributes":{"class":"form-group col-md-6"}},

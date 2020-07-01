@@ -79,7 +79,7 @@ abstract class Request extends FormRequest
 				if (Str::contains(get_called_class(), 'PostRequest')) {
 					$input['description'] = onlyNumCleaner($input['description']);
 				}
-				if (config('settings.single.simditor_wysiwyg')) {
+				if (config('settings.single.wysiwyg_editor') != 'none') {
 					try {
 						$input['description'] = Purifier::clean($input['description']);
 					} catch (\Exception $e) {

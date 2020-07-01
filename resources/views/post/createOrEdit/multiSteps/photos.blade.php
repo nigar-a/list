@@ -28,7 +28,26 @@
                 <div class="col-md-12 page-content">
                     <div class="inner-box">
 						
-                        <h2 class="title-2"><strong><i class="icon-camera-1"></i> {{ t('Photos') }}</strong></h2>
+                        <h2 class="title-2">
+							<strong><i class="icon-camera-1"></i> {{ t('Photos') }}</strong>
+							<?php
+							try {
+								if (auth()->check()) {
+									if (auth()->user()->can(\App\Models\Permission::getStaffPermissions())) {
+										$postLink = '-&nbsp;<a href="' . \App\Helpers\UrlGen::post($post) . '"
+												  class="tooltipHere"
+												  title=""
+												  data-placement="top"
+												  data-toggle="tooltip"
+												  data-original-title="' . $post->title . '"
+										>' . \Illuminate\Support\Str::limit($post->title, 45) . '</a>';
+										
+										echo $postLink;
+									}
+								}
+							} catch (\Exception $e) {}
+							?>
+						</h2>
 						
                         <div class="row">
                             <div class="col-md-12">
@@ -280,7 +299,7 @@
 				}
 		
 				/* Reorder Notification */
-				if (data.status == 1) {
+				if (parseInt(data.status) === 1) {
 					$('#uploadSuccess').html('<ul></ul>').hide();
 					$('#uploadSuccess ul').append('{{ t('Your picture has been reorder successfully') }}');
 					$('#uploadSuccess').fadeIn('slow');
