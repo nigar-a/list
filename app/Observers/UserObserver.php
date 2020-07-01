@@ -72,9 +72,9 @@ class UserObserver
 		}
 		
 		// Delete all user's Posts
-		$posts = Post::withoutGlobalScopes([VerifiedScope::class, ReviewedScope::class])->where('user_id', $user->id)->get();
+		$posts = Post::withoutGlobalScopes([VerifiedScope::class, ReviewedScope::class])->where('user_id', $user->id);
 		if ($posts->count() > 0) {
-			foreach ($posts as $post) {
+			foreach ($posts->cursor() as $post) {
 				$post->delete();
 			}
 		}
@@ -82,9 +82,9 @@ class UserObserver
 		// Delete all user's Messages
 		$messages = Message::where(function ($query) use ($user) {
 			$query->where('to_user_id', $user->id)->orWhere('from_user_id', $user->id);
-		})->get();
+		});
 		if ($messages->count() > 0) {
-			foreach ($messages as $message) {
+			foreach ($messages->cursor() as $message) {
 				if (empty($message->deleted_by)) {
 					// Delete the Entry for current user
 					$message->deleted_by = $user->id;
@@ -100,17 +100,17 @@ class UserObserver
 		}
 		
 		// Delete all user's Saved Posts
-		$savedPosts = SavedPost::where('user_id', $user->id)->get();
+		$savedPosts = SavedPost::where('user_id', $user->id);
 		if ($savedPosts->count() > 0) {
-			foreach ($savedPosts as $savedPost) {
+			foreach ($savedPosts->cursor() as $savedPost) {
 				$savedPost->delete();
 			}
 		}
 		
 		// Delete all user's Saved Searches
-		$savedSearches = SavedSearch::where('user_id', $user->id)->get();
+		$savedSearches = SavedSearch::where('user_id', $user->id);
 		if ($savedSearches->count() > 0) {
-			foreach ($savedSearches as $savedSearch) {
+			foreach ($savedSearches->cursor() as $savedSearch) {
 				$savedSearch->delete();
 			}
 		}
@@ -119,9 +119,9 @@ class UserObserver
 		if (config('plugins.reviews.installed')) {
 			try {
 				// Delete the reviews of this User
-				$reviews = \App\Plugins\reviews\app\Models\Review::where('user_id', $user->id)->get();
+				$reviews = \App\Plugins\reviews\app\Models\Review::where('user_id', $user->id);
 				if ($reviews->count() > 0) {
-					foreach ($reviews as $review) {
+					foreach ($reviews->cursor() as $review) {
 						$review->delete();
 					}
 				}

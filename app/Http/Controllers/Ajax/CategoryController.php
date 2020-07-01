@@ -31,14 +31,14 @@ class CategoryController extends FrontController
 	 */
 	public function getSubCategories(Request $request)
 	{
-		$languageCode     = $request->input('languageCode');
-		$parentId         = $request->input('catId');
+		$languageCode = $request->input('languageCode');
+		$parentId = $request->input('catId');
 		$selectedSubCatId = $request->input('selectedSubCatId');
 		
 		// Get SubCategories by Parent Category ID
 		$cacheId = 'subCategories.parentId.' . $parentId . '.' . $languageCode;
 		$subCats = Cache::remember($cacheId, $this->cacheExpiration, function () use ($languageCode, $parentId) {
-			return Category::transIn($languageCode)->whereRaw('FIND_IN_SET('.$parentId.',parent_id)')->orderBy('lft')->get();
+			return Category::transIn($languageCode)->where('parent_id', $parentId)->orderBy('lft')->get();
 		});
 		
 		// Select the Parent Category if his haven't any SubCategories
@@ -79,14 +79,21 @@ class CategoryController extends FrontController
 	public function getCustomFields(Request $request)
 	{
 		$languageCode = $request->input('languageCode');
-		$parentCatId  = $request->input('catId');
-		$catId        = $request->input('subCatId');
-		$postId       = $request->input('postId');
+		$parentCatId = $request->input('catId');
+		$catId = $request->input('subCatId');
+		$postId = $request->input('postId');
 		
 		// Custom Fields vars
-		$errors   = stripslashes($request->input('errors'));
-		$errors   = collect(json_decode($errors, true));
-		$oldInput = stripslashes($request->input('oldInput'));
+		$errors = $request->input('errors');
+		$errors = preg_replace('/\\\\u([a-fA-F0-9]{4})/ui', '&#x\\1;', $errors); // Escaped Unicode characters to HTML hex references. E.g. \u00e9 => &#x00e9;
+		$errors = html_entity_decode($errors); // Convert HTML entities to their corresponding characters. E.g. &#x00e9; => é
+		$errors = stripslashes($errors);
+		$errors = collect(json_decode($errors, true));
+		// ...
+		$oldInput = $request->input('oldInput');
+		$oldInput = preg_replace('/\\\\u([a-fA-F0-9]{4})/ui', '&#x\\1;', $oldInput); // Escaped Unicode characters to HTML hex references. E.g. \u00e9 => &#x00e9;
+		$oldInput = html_entity_decode($oldInput); // Convert HTML entities to their corresponding characters. E.g. &#x00e9; => é
+		$oldInput = stripslashes($oldInput);
 		$oldInput = json_decode($oldInput, true);
 		
 		// Get Category nested IDs

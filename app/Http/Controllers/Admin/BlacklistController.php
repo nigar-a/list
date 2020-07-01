@@ -16,6 +16,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Blacklist;
+use App\Models\Permission;
 use App\Models\Post;
 use App\Models\User;
 use Larapen\Admin\app\Http\Controllers\PanelController;
@@ -46,9 +47,9 @@ class BlacklistController extends PanelController
 		*/
 		// COLUMNS
 		$this->xPanel->addColumn([
-			'name'  => 'id',
-			'label' => '',
-			'type'  => 'checkbox',
+			'name'      => 'id',
+			'label'     => '',
+			'type'      => 'checkbox',
 			'orderable' => false,
 		]);
 		$this->xPanel->addColumn([
@@ -78,11 +79,21 @@ class BlacklistController extends PanelController
 	
 	public function store(StoreRequest $request)
 	{
+		// Check admin users (Don't ban admin users)
+		if ($this->isAnAdminUser()) {
+			return redirect()->back();
+		}
+		
 		return parent::storeCrud();
 	}
 	
 	public function update(UpdateRequest $request)
 	{
+		// Check admin users (Don't ban admin users)
+		if ($this->isAnAdminUser()) {
+			return redirect()->back();
+		}
+		
 		return parent::updateCrud();
 	}
 	
@@ -115,9 +126,20 @@ class BlacklistController extends PanelController
 			return redirect()->back();
 		}
 		
+		// Check admin users (Don't ban admin users)
+		if ($this->isAnAdminUser($email)) {
+			return redirect()->back();
+		}
+		
 		// Check the email has been banned
 		$banned = Blacklist::where('type', 'email')->where('entry', $email)->first();
 		if (!empty($banned)) {
+			/*
+			 * This for old email addresses banned...
+			 * New ban actions trigger the Blacklist's Observer
+			 * that delete the user and its posts (if exist).
+			 */
+			
 			// Delete the banned user related to the email address
 			$user = User::where('email', $banned->entry)->first();
 			if (!empty($user)) {
@@ -154,5 +176,42 @@ class BlacklistController extends PanelController
 		}
 		
 		return redirect($nextUrl)->header('Cache-Control', 'no-store, no-cache, must-revalidate');
+	}
+	
+	/**
+	 * Check if the current email address belongs to an admin user
+	 * Prevent admin users to be banned
+	 *
+	 * @param null $email
+	 * @return bool|\Illuminate\Http\RedirectResponse
+	 */
+	private function isAnAdminUser($email = null)
+	{
+		if (empty($email)) {
+			if (request()->filled('type') && request()->filled('entry')) {
+				if (request()->get('type') == 'email') {
+					$email = request()->get('entry');
+				}
+			}
+		}
+		
+		// Check admin users (Don't ban admin users)
+		if (!empty($email)) {
+			$user = User::where('email', $email)->first();
+			if (!empty($user)) {
+				if ($user->can(Permission::getStaffPermissions())) {
+					$msg = t('admin_users_cannot_be_banned');
+					if (isFromAdminPanel(url()->previous())) {
+						Alert::error($msg)->flash();
+					} else {
+						flash($msg)->error();
+					}
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }

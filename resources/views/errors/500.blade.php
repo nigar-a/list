@@ -34,8 +34,14 @@
 								<p>
 									<?php
 									$defaultErrorMessage = "An internal server error has occurred. If the error persists please contact the development team.";
+									
+									if (isset($exception)) {
+										// echo (env('APP_DEBUG') == true && $exception->getMessage()) ? $exception->getMessage() : $defaultErrorMessage;
+										echo echo ($exception->getMessage()) ? $exception->getMessage() : $defaultErrorMessage;
+									} else {
+										echo $defaultErrorMessage;
+									}
 									?>
-									{!! isset($exception) ? ($exception->getMessage() ? $exception->getMessage() : $defaultErrorMessage) : $defaultErrorMessage !!}
 								</p>
 							</div>
 						</div>
@@ -47,8 +53,9 @@
 			
 			<?php
 				$requirements = [];
-				if (!version_compare(PHP_VERSION, '7.1.3', '>=')) {
-					$requirements[] = 'PHP 7.1.3 or higher is required.';
+				$requiredPhpVersion = _getComposerRequiredPhpVersion();
+				if (!version_compare(PHP_VERSION, $requiredPhpVersion, '>=')) {
+					$requirements[] = 'PHP ' . $requiredPhpVersion . ' or higher is required.';
 				}
 				if (!extension_loaded('openssl')) {
 					$requirements[] = 'OpenSSL PHP Extension is required.';

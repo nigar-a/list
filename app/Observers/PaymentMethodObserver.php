@@ -35,9 +35,9 @@ class PaymentMethodObserver
 	{
 		/*
 		// Delete the payments of this PaymentMethod
-		$payments = Payment::withoutGlobalScope(StrictActiveScope::class)->where('payment_method_id', $paymentMethod->id)->get();
+		$payments = Payment::withoutGlobalScope(StrictActiveScope::class)->where('payment_method_id', $paymentMethod->id);
 		if ($payments->count() > 0) {
-			foreach ($payments as $payment) {
+			foreach ($payments->cursor() as $payment) {
 				// NOTE: Take account the payment plugins install/uninstall
 				$payment->delete();
 			}

@@ -198,6 +198,117 @@
 					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
 				</div>
 			</div>
+		
+		@elseif ($field->type == 'url')
+			
+			<!-- url -->
+			<div class="form-group row {{ $requiredClass }}">
+				<label class="col-md-3 col-form-label" for="{{ $fieldId }}">
+					{{ $field->name }}
+					@if ($field->required == 1)
+						<sup>*</sup>
+					@endif
+				</label>
+				<div class="col-md-8">
+					<input id="{{ $fieldId }}"
+						   name="{{ $fieldName }}"
+						   type="text"
+						   placeholder="{{ $field->name }}"
+						   class="form-control input-md{{ $errorClass }}"
+						   value="{{ $defaultValue }}">
+					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
+				</div>
+			</div>
+		
+		@elseif ($field->type == 'number')
+			
+			<!-- number -->
+			<div class="form-group row {{ $requiredClass }}">
+				<label class="col-md-3 col-form-label" for="{{ $fieldId }}">
+					{{ $field->name }}
+					@if ($field->required == 1)
+						<sup>*</sup>
+					@endif
+				</label>
+				<div class="col-md-8">
+					<input id="{{ $fieldId }}"
+						   name="{{ $fieldName }}"
+						   type="number"
+						   placeholder="{{ $field->name }}"
+						   class="form-control input-md{{ $errorClass }}"
+						   value="{{ $defaultValue }}">
+					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
+				</div>
+			</div>
+		
+		@elseif ($field->type == 'date')
+			
+			<!-- date -->
+			<div class="form-group row {{ $requiredClass }}">
+				<label class="col-md-3 col-form-label" for="{{ $fieldId }}">
+					{{ $field->name }}
+					@if ($field->required == 1)
+						<sup>*</sup>
+					@endif
+				</label>
+				<div class="col-md-8">
+					<input id="{{ $fieldId }}"
+						   name="{{ $fieldName }}"
+						   type="text"
+						   placeholder="{{ $field->name }}"
+						   class="form-control input-md{{ $errorClass }} cf-date"
+						   value="{{ $defaultValue }}"
+						   autocomplete="off"
+					>
+					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
+				</div>
+			</div>
+			
+		@elseif ($field->type == 'date_time')
+			
+			<!-- date_time -->
+			<div class="form-group row {{ $requiredClass }}">
+				<label class="col-md-3 col-form-label" for="{{ $fieldId }}">
+					{{ $field->name }}
+					@if ($field->required == 1)
+						<sup>*</sup>
+					@endif
+				</label>
+				<div class="col-md-8">
+					<input id="{{ $fieldId }}"
+						   name="{{ $fieldName }}"
+						   type="text"
+						   placeholder="{{ $field->name }}"
+						   class="form-control input-md{{ $errorClass }} cf-date_time"
+						   value="{{ $defaultValue }}"
+						   autocomplete="off"
+					>
+					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
+				</div>
+			</div>
+			
+		@elseif ($field->type == 'date_range')
+			
+			<!-- date_range -->
+			<div class="form-group row {{ $requiredClass }}">
+				<label class="col-md-3 col-form-label" for="{{ $fieldId }}">
+					{{ $field->name }}
+					@if ($field->required == 1)
+						<sup>*</sup>
+					@endif
+				</label>
+				<div class="col-md-8">
+					<input id="{{ $fieldId }}"
+						   name="{{ $fieldName }}"
+						   type="text"
+						   placeholder="{{ $field->name }}"
+						   class="form-control input-md{{ $errorClass }} cf-date_range"
+						   value="{{ $defaultValue }}"
+						   autocomplete="off"
+					>
+					<small id="" class="form-text text-muted">{!! $field->help !!}</small>
+				</div>
+			</div>
 			
 		@else
 			
@@ -223,3 +334,154 @@
 		@endif
 	@endforeach
 @endif
+
+<script>
+	$(function() {
+		/*
+		 * Custom Fields Date Picker
+		 * https://www.daterangepicker.com/#options
+		 */
+		{{-- Single Date --}}
+		$('#customFields .cf-date').daterangepicker({
+			autoUpdateInput: false,
+			autoApply: true,
+			showDropdowns: true,
+			minYear: parseInt(moment().format('YYYY')) - 100,
+			maxYear: parseInt(moment().format('YYYY')) + 20,
+			locale: {
+				format: '{{ t('datepicker_format') }}',
+				applyLabel: "{{ t('datepicker_applyLabel') }}",
+				cancelLabel: "{{ t('datepicker_cancelLabel') }}",
+				fromLabel: "{{ t('datepicker_fromLabel') }}",
+				toLabel: "{{ t('datepicker_toLabel') }}",
+				customRangeLabel: "{{ t('datepicker_customRangeLabel') }}",
+				weekLabel: "{{ t('datepicker_weekLabel') }}",
+				daysOfWeek: [
+					"{{ t('datepicker_sunday') }}",
+					"{{ t('datepicker_monday') }}",
+					"{{ t('datepicker_tuesday') }}",
+					"{{ t('datepicker_wednesday') }}",
+					"{{ t('datepicker_thursday') }}",
+					"{{ t('datepicker_friday') }}",
+					"{{ t('datepicker_saturday') }}"
+				],
+				monthNames: [
+					"{{ t('January') }}",
+					"{{ t('February') }}",
+					"{{ t('March') }}",
+					"{{ t('April') }}",
+					"{{ t('May') }}",
+					"{{ t('June') }}",
+					"{{ t('July') }}",
+					"{{ t('August') }}",
+					"{{ t('September') }}",
+					"{{ t('October') }}",
+					"{{ t('November') }}",
+					"{{ t('December') }}"
+				],
+				firstDay: 1
+			},
+			singleDatePicker: true,
+			startDate: moment().format('{{ t('datepicker_format') }}')
+		});
+		$('#customFields .cf-date').on('apply.daterangepicker', function(ev, picker) {
+			$(this).val(picker.startDate.format('{{ t('datepicker_format') }}'));
+		});
+		
+		{{-- Single Date (with Time) --}}
+		$('#customFields .cf-date_time').daterangepicker({
+			autoUpdateInput: false,
+			autoApply: true,
+			showDropdowns: false,
+			minYear: parseInt(moment().format('YYYY')) - 100,
+			maxYear: parseInt(moment().format('YYYY')) + 20,
+			locale: {
+				format: '{{ t('datepicker_format_datetime') }}',
+				applyLabel: "{{ t('datepicker_applyLabel') }}",
+				cancelLabel: "{{ t('datepicker_cancelLabel') }}",
+				fromLabel: "{{ t('datepicker_fromLabel') }}",
+				toLabel: "{{ t('datepicker_toLabel') }}",
+				customRangeLabel: "{{ t('datepicker_customRangeLabel') }}",
+				weekLabel: "{{ t('datepicker_weekLabel') }}",
+				daysOfWeek: [
+					"{{ t('datepicker_sunday') }}",
+					"{{ t('datepicker_monday') }}",
+					"{{ t('datepicker_tuesday') }}",
+					"{{ t('datepicker_wednesday') }}",
+					"{{ t('datepicker_thursday') }}",
+					"{{ t('datepicker_friday') }}",
+					"{{ t('datepicker_saturday') }}"
+				],
+				monthNames: [
+					"{{ t('January') }}",
+					"{{ t('February') }}",
+					"{{ t('March') }}",
+					"{{ t('April') }}",
+					"{{ t('May') }}",
+					"{{ t('June') }}",
+					"{{ t('July') }}",
+					"{{ t('August') }}",
+					"{{ t('September') }}",
+					"{{ t('October') }}",
+					"{{ t('November') }}",
+					"{{ t('December') }}"
+				],
+				firstDay: 1
+			},
+			singleDatePicker: true,
+			timePicker: true,
+			timePicker24Hour: true,
+			startDate: moment().format('{{ t('datepicker_format_datetime') }}')
+		});
+		$('#customFields .cf-date_time').on('apply.daterangepicker', function(ev, picker) {
+			$(this).val(picker.startDate.format('{{ t('datepicker_format_datetime') }}'));
+		});
+		
+		{{-- Date Range --}}
+		$('#customFields .cf-date_range').daterangepicker({
+			autoUpdateInput: false,
+			autoApply: true,
+			showDropdowns: false,
+			minYear: parseInt(moment().format('YYYY')) - 100,
+			maxYear: parseInt(moment().format('YYYY')) + 20,
+			locale: {
+				format: '{{ t('datepicker_format') }}',
+				applyLabel: "{{ t('datepicker_applyLabel') }}",
+				cancelLabel: "{{ t('datepicker_cancelLabel') }}",
+				fromLabel: "{{ t('datepicker_fromLabel') }}",
+				toLabel: "{{ t('datepicker_toLabel') }}",
+				customRangeLabel: "{{ t('datepicker_customRangeLabel') }}",
+				weekLabel: "{{ t('datepicker_weekLabel') }}",
+				daysOfWeek: [
+					"{{ t('datepicker_sunday') }}",
+					"{{ t('datepicker_monday') }}",
+					"{{ t('datepicker_tuesday') }}",
+					"{{ t('datepicker_wednesday') }}",
+					"{{ t('datepicker_thursday') }}",
+					"{{ t('datepicker_friday') }}",
+					"{{ t('datepicker_saturday') }}"
+				],
+				monthNames: [
+					"{{ t('January') }}",
+					"{{ t('February') }}",
+					"{{ t('March') }}",
+					"{{ t('April') }}",
+					"{{ t('May') }}",
+					"{{ t('June') }}",
+					"{{ t('July') }}",
+					"{{ t('August') }}",
+					"{{ t('September') }}",
+					"{{ t('October') }}",
+					"{{ t('November') }}",
+					"{{ t('December') }}"
+				],
+				firstDay: 1
+			},
+			startDate: moment().format('{{ t('datepicker_format') }}'),
+			endDate: moment().add(1, 'days').format('{{ t('datepicker_format') }}')
+		});
+		$('#customFields .cf-date_range').on('apply.daterangepicker', function(ev, picker) {
+			$(this).val(picker.startDate.format('{{ t('datepicker_format') }}') + ' - ' + picker.endDate.format('{{ t('datepicker_format') }}'));
+		});
+	});
+</script>
