@@ -97,7 +97,8 @@ class SellerContacted extends Notification implements ShouldQueue
 			->line(trans('mail.post_seller_contacted_content_5'))
 			->line(trans('mail.post_seller_contacted_content_6'))
 			->line('<br>')
-			->line(trans('mail.post_seller_contacted_content_7'));
+			->line(trans('mail.post_seller_contacted_content_7'))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 		
 		// Check & get attachment file
 		if (!empty($this->msg->filename)) {

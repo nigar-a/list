@@ -40,9 +40,9 @@ class MessageObserver
 		
 		// If it is a Conversation, Delete it and its Messages if exist
 		if ($message->parent_id == 0) {
-			$conversationMessages = Message::where('parent_id', $message->id)->get();
+			$conversationMessages = Message::where('parent_id', $message->id);
 			if ($conversationMessages->count() > 0) {
-				foreach ($conversationMessages as $conversationMessage) {
+				foreach ($conversationMessages->cursor() as $conversationMessage) {
 					$conversationMessage->delete();
 				}
 			}

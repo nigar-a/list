@@ -173,12 +173,20 @@ class Category extends BaseModel
 	| RELATIONS
 	|--------------------------------------------------------------------------
 	*/
+	// More Info: https://laravel.com/docs/master/eloquent-relationships#has-many-through
 	public function posts()
 	{
 		if (isFromAdminPanel()) {
 			return $this->hasManyThrough(Post::class, Category::class, 'parent_id', 'category_id');
 		} else {
-			return $this->hasManyThrough(Post::class, Category::class, 'parent_id', 'category_id')->where('country_code', config('country.code'));
+			return $this->hasManyThrough(
+				Post::class,
+				Category::class,
+				'parent_id',      // Foreign key on categories table...
+				'category_id',    // Foreign key on posts table...
+				'translation_of', // Local key on categories table...
+				'id'              // Local key on categories table...
+			)->where('country_code', config('country.code'));
 		}
 	}
 	
@@ -187,7 +195,7 @@ class Category extends BaseModel
 		if (isFromAdminPanel()) {
 			return $this->hasMany(Post::class, 'category_id');
 		} else {
-			return $this->hasMany(Post::class, 'category_id')->where('country_code', config('country.code'));
+			return $this->hasMany(Post::class, 'category_id', 'translation_of')->where('country_code', config('country.code'));
 		}
 	}
 	
@@ -223,6 +231,7 @@ class Category extends BaseModel
 		if ($this->slug != '') {
 			return $this->slug;
 		}
+		
 		return $this->name;
 	}
 	
@@ -289,6 +298,7 @@ class Category extends BaseModel
 		// NEW PATH
 		if (!isset($this->attributes) || !isset($this->attributes['picture'])) {
 			$value = 'app/default/categories/fa-folder-' . $skin . '.png';
+			
 			return $value;
 		}
 		

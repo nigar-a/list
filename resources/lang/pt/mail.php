@@ -8,6 +8,7 @@ return [
 into your web browser:' => 'Se você está com problemas para clicar no botão ":actionText", copie e cole o URL abaixo
 em seu navegador da Web:',
     'All rights reserved.' => 'Todos os direitos reservados.',
+	'footer_salutation' => 'Saudações,<br>:appName',
     'mail_footer_content' => 'Venda e compre perto de você. Simples, rápido e eficiente.',
     'email_verification_title' => 'Verifique seu endereço de e-mail.',
     'email_verification_action' => 'Verificar endereço de e-mail',

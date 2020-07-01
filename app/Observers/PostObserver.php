@@ -94,25 +94,25 @@ class PostObserver
 		}
 		
 		// Delete all Messages
-		$messages = Message::where('post_id', $post->id)->get();
+		$messages = Message::where('post_id', $post->id);
 		if ($messages->count() > 0) {
-			foreach ($messages as $message) {
+			foreach ($messages->cursor() as $message) {
 				$message->delete();
 			}
 		}
 		
 		// Delete all Saved Posts
-		$savedPosts = SavedPost::where('post_id', $post->id)->get();
+		$savedPosts = SavedPost::where('post_id', $post->id);
 		if ($savedPosts->count() > 0) {
-			foreach ($savedPosts as $savedPost) {
+			foreach ($savedPosts->cursor() as $savedPost) {
 				$savedPost->delete();
 			}
 		}
 		
 		// Delete all Pictures
-		$pictures = Picture::where('post_id', $post->id)->get();
+		$pictures = Picture::where('post_id', $post->id);
 		if ($pictures->count() > 0) {
-			foreach ($pictures as $picture) {
+			foreach ($pictures->cursor() as $picture) {
 				$picture->delete();
 			}
 		}
@@ -129,9 +129,9 @@ class PostObserver
 		if (config('plugins.reviews.installed')) {
 			try {
 				// Delete the reviews of this Post
-				$reviews = \App\Plugins\reviews\app\Models\Review::where('post_id', $post->id)->get();
+				$reviews = \App\Plugins\reviews\app\Models\Review::where('post_id', $post->id);
 				if ($reviews->count() > 0) {
-					foreach ($reviews as $review) {
+					foreach ($reviews->cursor() as $review) {
 						$review->delete();
 					}
 				}

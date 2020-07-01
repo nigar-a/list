@@ -55,7 +55,8 @@ class UserActivated extends Notification implements ShouldQueue
 			->greeting(trans('mail.user_activated_content_1', ['appName' => config('app.name'), 'userName' => $this->user->name]))
 			->line(trans('mail.user_activated_content_2'))
 			->line(trans('mail.user_activated_content_3', ['appName' => config('app.name')]))
-			->line(trans('mail.user_activated_content_4', ['appName' => config('app.name')]));
+			->line(trans('mail.user_activated_content_4', ['appName' => config('app.name')]))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 	}
 	
 	public function toNexmo($notifiable)

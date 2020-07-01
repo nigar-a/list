@@ -61,7 +61,8 @@ class PostReviewed extends Notification implements ShouldQueue
 				'postUrl' => $postUrl,
 				'title'   => $this->post->title,
 			]))
-			->line(trans('mail.post_reviewed_content_3', ['appName' => config('app.name')]));
+			->line(trans('mail.post_reviewed_content_3', ['appName' => config('app.name')]))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 	}
 	
 	public function toNexmo($notifiable)

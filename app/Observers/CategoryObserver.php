@@ -46,9 +46,9 @@ class CategoryObserver extends TranslatedModelObserver
 		}
 		
 		// Delete all the Category's Posts
-		$posts = Post::where('category_id', $category->id)->get();
+		$posts = Post::where('category_id', $category->id);
 		if ($posts->count() > 0) {
-			foreach ($posts as $post) {
+			foreach ($posts->cursor() as $post) {
 				$post->delete();
 			}
 		}
