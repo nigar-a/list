@@ -144,20 +144,22 @@ if (file_exists(config('larapen.core.maps.path') . config('country.icode') . '.s
 @else
 	
 	@include('home.inc.spacer')
-	
-			<div class="dtable">
-				<div class="dtable-cell">
+	<div class="container">
+		<div class="intro">
+			<div class="dtable hw100">
+				<div class="dtable-cell hw100">
 					<div class="container text-center">
 						
 						<div class="search-row fadeInUp">
 							<?php $attr = ['countryCode' => config('country.icode')]; ?>
 							<form id="search" name="search" action="{{ lurl(trans('routes.v-search', $attr), $attr) }}" method="GET">
 								<div class="row m-0">
-									<div class="col-sm-10 col-xs-12 search-col relative">
-									<input type="text" name="q" class="form-control keyword has-icon" placeholder="{{ t('What?') }}" value="">
+									<div class="col-sm-5 col-xs-12 search-col relative">
+										<i class="icon-docs icon-append"></i>
+										<input type="text" name="q" class="form-control keyword has-icon" placeholder="{{ t('What?') }}" value="">
 									</div>
 									
-								<!-- 	<div class="col-sm-5 col-xs-12 search-col relative locationicon">
+									<div class="col-sm-5 col-xs-12 search-col relative locationicon">
 										<i class="icon-location-2 icon-append"></i>
 										<input type="hidden" id="lSearch" name="l" value="">
 										@if ($showMap)
@@ -169,11 +171,11 @@ if (file_exists(config('larapen.core.maps.path') . config('country.icode') . '.s
 											<input type="text" id="locSearch" name="location" class="form-control locinput input-rel searchtag-input has-icon"
 												   placeholder="{{ t('Where?') }}" value="">
 										@endif
-									</div> -->
+									</div>
 									
 									<div class="col-sm-2 col-xs-12 search-col">
-										<button class="btn btn-primary btn-search btn-block p0">
-											<i class="icon-search"></i> 
+										<button class="btn btn-primary btn-search btn-block">
+											<i class="icon-search"></i> <strong>{{ t('Find') }}</strong>
 										</button>
 									</div>
 									{!! csrf_field() !!}
@@ -184,6 +186,7 @@ if (file_exists(config('larapen.core.maps.path') . config('country.icode') . '.s
 					</div>
 				</div>
 			</div>
-		
+		</div>
+	</div>
 	
 @endif

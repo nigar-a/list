@@ -8,6 +8,7 @@ return [
 into your web browser:' => 'Si vous ne parvenez pas à cliquer sur le bouton ":actionText", copiez et collez l\'URL ci-dessous
 dans votre navigateur Web:',
     'All rights reserved.' => 'Tous droits réservés.',
+	'footer_salutation' => 'Cordialement,<br>:appName',
     'mail_footer_content' => 'Vendez et achetez près de chez vous. Simple, rapide et efficace.',
     'email_verification_title' => 'Vérifier votre adresse email.',
     'email_verification_action' => 'Vérifier l\'adresse email',

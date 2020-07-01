@@ -103,66 +103,29 @@ class PanelController extends Controller
 			if (is_null($request)) {
 				$request = \Request::instance();
 			}
-
-			$slugExists = false;
 			
 			// replace empty values with NULL, so that it will work with MySQL strict mode on
 			foreach ($request->input() as $key => $value) {
 				if (empty($value) && $value !== '0') {
 					$request->request->set($key, null);
 				}
-				// if slug exists change parent_id field
-				if($key == 'slug'){
-					$entry_slug = $value;
-					$entry = $this->xPanel->getEntryWithSlug($entry_slug);
-					if($entry && !is_null($entry))
-						$slugExists = true;
-					/*$request->request->set('parent_id', $entry->parent_id);
-					$request->request->set('name', $entry->name);
-					$request->request->set('description', $entry->description);*/
-				}
 			}
-
-			if(!$slugExists) {			
-
-				// insert item in the db
-				$item = $this->xPanel->create($request->except(['redirect_after_save', '_token']));
-				
-				if (empty($item)) {
-					\Alert::error(trans('admin::messages.error_saving_entry'))->flash();
-					return back();
-				}
-				
-				// show a success message
-				\Alert::success(trans('admin::messages.insert_success'))->flash();
-				
-				// save the redirect choice for next time
-				$this->setSaveAction();
-				
-				return $this->performSaveAction($item->getKey());
+			
+			// insert item in the db
+			$item = $this->xPanel->create($request->except(['redirect_after_save', '_token']));
+			
+			if (empty($item)) {
+				\Alert::error(trans('admin::messages.error_saving_entry'))->flash();
+				return back();
 			}
-			else{
-				$entry_parent_id = $entry->parent_id;
-				foreach ($request->input() as $key => $value) {
-					if($key == 'parent_id' && !preg_match("/(^|,)".$entry_parent_id."(,|$)/",$value)){
-						$entry_parent_id = $entry_parent_id.','.$value;
-					}
-				}
-				$updated = $this->xPanel->updateEntryParent($entry_parent_id, $entry->id);
-				
-				if (!$updated) {
-					\Alert::error(trans('admin::messages.error_saving_entry'))->flash();
-					return back();
-				}
-				
-				// show a success message
-				\Alert::success(trans('admin::messages.insert_success'))->flash();
-				
-				// save the redirect choice for next time
-				$this->setSaveAction();
-				
-				return $this->performSaveAction();
-			}
+			
+			// show a success message
+			\Alert::success(trans('admin::messages.insert_success'))->flash();
+			
+			// save the redirect choice for next time
+			$this->setSaveAction();
+			
+			return $this->performSaveAction($item->getKey());
 		} catch (\Exception $e) {
 			// Get error message
 			if (isset($e->errorInfo) && isset($e->errorInfo[2]) && !empty($e->errorInfo[2])) {

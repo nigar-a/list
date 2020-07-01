@@ -22,94 +22,121 @@ use Larapen\Admin\app\Models\Crud;
 
 class Field extends BaseModel
 {
-    use Crud, TranslatedTrait;
-    
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'fields';
-    
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
-    // protected $primaryKey = 'id';
-    protected $appends = ['tid', /*'options'*/];
-    
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var boolean
-     */
-    public $timestamps = false;
-    
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = ['id'];
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'belongs_to',
-        'translation_lang',
-        'translation_of',
-        'name',
-        'type',
-        'max',
-        'default',
-        'required',
-        'help',
-        'active',
-    ];
-    public $translatable = ['name', 'default', 'help'];
-    
-    /**
-     * The attributes that should be hidden for arrays
-     *
-     * @var array
-     */
-    // protected $hidden = [];
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    // protected $dates = [];
-    
-    /*
-    |--------------------------------------------------------------------------
-    | FUNCTIONS
-    |--------------------------------------------------------------------------
-    */
-    protected static function boot()
-    {
-        parent::boot();
+	use Crud, TranslatedTrait;
 	
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'fields';
+	
+	/**
+	 * The primary key for the model.
+	 *
+	 * @var string
+	 */
+	// protected $primaryKey = 'id';
+	protected $appends = ['tid', /*'options'*/];
+	
+	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var boolean
+	 */
+	public $timestamps = false;
+	
+	/**
+	 * The attributes that aren't mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $guarded = ['id'];
+	
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'belongs_to',
+		'translation_lang',
+		'translation_of',
+		'name',
+		'type',
+		'max',
+		'default',
+		'required',
+		'use_as_filter',
+		'help',
+		'active',
+	];
+	public $translatable = ['name', 'default', 'help'];
+	
+	/**
+	 * The attributes that should be hidden for arrays
+	 *
+	 * @var array
+	 */
+	// protected $hidden = [];
+	
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	// protected $dates = [];
+	
+	/*
+	|--------------------------------------------------------------------------
+	| FUNCTIONS
+	|--------------------------------------------------------------------------
+	*/
+	protected static function boot()
+	{
+		parent::boot();
+		
 		Field::observe(FieldObserver::class);
 		
-        static::addGlobalScope(new ActiveScope());
-    }
-    
-    public function getNameHtml()
-    {
+		static::addGlobalScope(new ActiveScope());
+	}
+	
+	public static function fieldTypes()
+	{
+		return [
+			'text'              => 'Text',
+			'textarea'          => 'Textarea',
+			'checkbox'          => 'Checkbox',
+			'checkbox_multiple' => 'Checkbox (Multiple)',
+			'select'            => 'Select Box',
+			'radio'             => 'Radio',
+			'file'              => 'File',
+			'url'               => 'URL',
+			'number'            => 'Number',
+			'date'              => 'Date',
+			'date_time'         => 'Date Time',
+			'date_range'        => 'Date Range',
+			'video'             => 'Video (Youtube, Vimeo)',
+		];
+	}
+	
+	public function getNameHtml()
+	{
 		$currentUrl = preg_replace('#/(search)$#', '', url()->current());
 		$url = $currentUrl . '/' . $this->id . '/edit';
 		
-        $out = '<a href="' . $url . '">' . $this->name . '</a>';
-        
-        return $out;
-    }
-    
+		$out = '<a href="' . $url . '">' . $this->name . '</a>';
+		
+		return $out;
+	}
+	
+	public function getTypeHtml()
+	{
+		$types = self::fieldTypes();
+		
+		return (isset($types[$this->type])) ? $types[$this->type] : $this->type;
+	}
+	
 	public function optionsBtn($xPanel = false)
 	{
 		$out = '';
@@ -138,68 +165,68 @@ class Field extends BaseModel
 		
 		return $out;
 	}
-    
-    public function getRequiredHtml()
-    {
-        if (!isset($this->required)) return false;
-        
-        return checkboxDisplay($this->required);
-    }
-    
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONS
-    |--------------------------------------------------------------------------
-    */
-    public function lang()
-    {
-        return $this->hasOne(Category::class, 'translation_of', 'abbr');
-    }
-    
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id', 'translation_of')->where('translation_lang', config('app.locale'));
-    }
-    
-    public function options()
-    {
-        return $this->hasMany(FieldOption::class, 'field_id', 'translation_of')->where('translation_lang', config('app.locale'))
+	
+	public function getRequiredHtml()
+	{
+		if (!isset($this->required)) return false;
+		
+		return checkboxDisplay($this->required);
+	}
+	
+	/*
+	|--------------------------------------------------------------------------
+	| RELATIONS
+	|--------------------------------------------------------------------------
+	*/
+	public function lang()
+	{
+		return $this->hasOne(Category::class, 'translation_of', 'abbr');
+	}
+	
+	public function category()
+	{
+		return $this->belongsTo(Category::class, 'category_id', 'translation_of')->where('translation_lang', config('app.locale'));
+	}
+	
+	public function options()
+	{
+		return $this->hasMany(FieldOption::class, 'field_id', 'translation_of')->where('translation_lang', config('app.locale'))
 			->orderBy('lft', 'ASC')
 			->orderBy('value', 'ASC');
-    }
-    
-    /*
-    |--------------------------------------------------------------------------
-    | SCOPES
-    |--------------------------------------------------------------------------
-    */
-    
-    /*
-    |--------------------------------------------------------------------------
-    | ACCESSORS
-    |--------------------------------------------------------------------------
-    */
-    /*
-    public function getOptionsAttribute()
-    {
-        // Get the Custom Field's Options
-        $options = collect([]);
-        if (in_array($this->type, ['checkbox_multiple', 'select', 'radio'])) {
-            $options = FieldOption::where('translation_lang', $this->translation_lang)
-                ->where('field_id', $this->tid)
-                ->orderBy('lft', 'ASC')
-                ->orderBy('value', 'ASC')
-                ->get()
-                ->keyBy('translation_of');
-        }
-        
-        return $options;
-    }
-    */
-    
-    /*
-    |--------------------------------------------------------------------------
-    | MUTATORS
-    |--------------------------------------------------------------------------
-    */
+	}
+	
+	/*
+	|--------------------------------------------------------------------------
+	| SCOPES
+	|--------------------------------------------------------------------------
+	*/
+	
+	/*
+	|--------------------------------------------------------------------------
+	| ACCESSORS
+	|--------------------------------------------------------------------------
+	*/
+	/*
+	public function getOptionsAttribute()
+	{
+		// Get the Custom Field's Options
+		$options = collect([]);
+		if (in_array($this->type, ['checkbox_multiple', 'select', 'radio'])) {
+			$options = FieldOption::where('translation_lang', $this->translation_lang)
+				->where('field_id', $this->tid)
+				->orderBy('lft', 'ASC')
+				->orderBy('value', 'ASC')
+				->get()
+				->keyBy('translation_of');
+		}
+		
+		return $options;
+	}
+	*/
+	
+	/*
+	|--------------------------------------------------------------------------
+	| MUTATORS
+	|--------------------------------------------------------------------------
+	*/
 }

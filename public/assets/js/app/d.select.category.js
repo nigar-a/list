@@ -27,7 +27,7 @@ if (typeof langLayout !== 'undefined' && typeof langLayout.select2 !== 'undefine
 	select2Language = langLayout.select2;
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
 	
 	/* CSRF Protection */
 	var token = $('meta[name="csrf-token"]').attr('content');
@@ -46,7 +46,7 @@ $(document).ready(function() {
 	getCustomFieldsByCategory(siteUrl, languageCode, category, subCategory);
 	
 	/* On category selected */
-	$('#parentId').bind('click, change', function() {
+	$('#parentId').on('click, change', function () {
 		category = $(this).val();
 		var selectedCat = $(this).find('option:selected');
 		var selectedCatType = selectedCat.data('type');
@@ -65,7 +65,7 @@ $(document).ready(function() {
 	});
 	
 	/* On subcategory selected */
-	$('#categoryId').bind('click, change', function() {
+	$('#categoryId').on('click, change', function () {
 		category = $('#parentId').val();
 		subCategory = $(this).val();
 		
@@ -73,12 +73,12 @@ $(document).ready(function() {
 		var selectedSubCatType = selectedSubCat.data('type');
 		
 		/* Check resume file field */
-		if (selectedSubCatType != '') {
+		if (selectedSubCatType !== '') {
 			applyCategoryTypeActions('categoryType', selectedSubCatType, packageIsEnabled);
 		}
 		
 		/* Get the category and subcategory's custom fields (merged) */
-		if (category != 0 && subCategory != 0) {
+		if (category !== 0 && subCategory !== 0) {
 			getCustomFieldsByCategory(siteUrl, languageCode, category, subCategory);
 		}
 	});
@@ -92,7 +92,7 @@ function getSubCategories(siteUrl, languageCode, catId, selectedSubCatId) {
 	}
 	
 	/* Don't make ajax request if any category has selected. */
-	if (catId == 0 || catId == '') {
+	if (catId === 0 || catId === '') {
 		/* Remove all entries from subcategory field. */
 		$('#categoryId').empty();
 		$('#categoryId').append('<option value="0" data-type="">' + lang.select.subCategory + '</option>');
@@ -116,7 +116,7 @@ function getSubCategories(siteUrl, languageCode, catId, selectedSubCatId) {
 			'selectedSubCatId': selectedSubCatId,
 			'languageCode': languageCode
 		}
-	}).done(function(obj) {
+	}).done(function (obj) {
 		/* init. */
 		$('#categoryId').empty();
 		$('#categoryId').append('<option value="0" data-type="">' + lang.select.subCategory + '</option>');
@@ -140,7 +140,7 @@ function getSubCategories(siteUrl, languageCode, catId, selectedSubCatId) {
 		var subCategoryType = $('#parentType').val();
 		
 		/* Bind data into Select list */
-		if (obj.countSubCats == 1) {
+		if (obj.countSubCats === 1) {
 			$('#subCatBloc').hide();
 			
 			$('#categoryId').empty();
@@ -153,7 +153,7 @@ function getSubCategories(siteUrl, languageCode, catId, selectedSubCatId) {
 		} else {
 			$('#subCatBloc').show();
 			
-			$.each(obj.subCats, function(key, subCat) {
+			$.each(obj.subCats, function (key, subCat) {
 				if (selectedSubCatId == subCat.tid) {
 					$('#categoryId').append('<option value="' + subCat.tid + '" data-type="' + subCat.type + '" selected="selected">' + subCat.name + '</option>');
 					
@@ -196,7 +196,7 @@ function getCustomFieldsByCategory(siteUrl, languageCode, catId, subCatId) {
 	}
 	
 	/* Don't make ajax request if any category has selected. */
-	if (catId == 0 || catId == '') {
+	if (catId === 0 || catId === '') {
 		return false;
 	}
 	
@@ -213,7 +213,7 @@ function getCustomFieldsByCategory(siteUrl, languageCode, catId, subCatId) {
 			'oldInput': oldInput,
 			'postId': (typeof postId !== 'undefined') ? postId : ''
 		}
-	}).done(function(obj) {
+	}).done(function (obj) {
 		/* Load Custom Fields */
 		$('#customFields').html(obj.customFields);
 		
@@ -235,23 +235,23 @@ function getCustomFieldsByCategory(siteUrl, languageCode, catId, subCatId) {
  * @param packageIsEnabled
  */
 function applyCategoryTypeActions(categoryTypeFieldId, categoryTypeValue, packageIsEnabled) {
-	$('#' + categoryTypeFieldId).val(categoryTypeValue);
+	/* $('#' + categoryTypeFieldId).val(categoryTypeValue); */
 	$('#' + categoryTypeFieldId).val(categoryTypeValue);
 	
 	/* Debug */
 	/* console.log(categoryTypeFieldId + ': ' + categoryTypeValue); */
 	
-	if (categoryTypeValue == 'job-offer') {
+	if (categoryTypeValue === 'job-offer') {
 		$('#postTypeBloc label[for="post_type_id-1"]').show();
 		$('#priceBloc label[for="price"]').html(lang.salary);
 		$('#priceBloc').show();
-	} else if (categoryTypeValue == 'job-search') {
+	} else if (categoryTypeValue === 'job-search') {
 		$('#postTypeBloc label[for="post_type_id-2"]').hide();
 		
 		$('#postTypeBloc input[value="1"]').attr('checked', 'checked');
 		$('#priceBloc label[for="price"]').html(lang.salary);
 		$('#priceBloc').show();
-	} else if (categoryTypeValue == 'not-salable') {
+	} else if (categoryTypeValue === 'not-salable') {
 		$('#priceBloc').hide();
 		
 		$('#postTypeBloc label[for="post_type_id-2"]').show();

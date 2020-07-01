@@ -61,7 +61,8 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 			->line(trans('mail.reset_password_content_1'))
 			->line(trans('mail.reset_password_content_2'))
 			->action(trans('mail.reset_password_action'), $resetPwdUrl)
-			->line(trans('mail.reset_password_content_3'));
+			->line(trans('mail.reset_password_content_3'))
+			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
 	}
 	
 	public function toNexmo($notifiable)

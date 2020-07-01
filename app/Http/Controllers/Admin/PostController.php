@@ -233,11 +233,13 @@ class PostController extends PanelController
 				'placeholder' => trans("admin::messages.Title"),
 			],
 		]);
+		$wysiwygEditor = config('settings.single.wysiwyg_editor');
+		$wysiwygEditorViewPath = '/views/vendor/admin/panel/fields/' . $wysiwygEditor . '.blade.php';
 		$this->xPanel->addField([
 			'name'       => 'description',
 			'label'      => trans("admin::messages.Description"),
-			'type'       => (config('settings.single.simditor_wysiwyg'))
-				? 'simditor'
+			'type'       => ($wysiwygEditor != 'none' && file_exists(resource_path() . $wysiwygEditorViewPath))
+				? $wysiwygEditor
 				: 'textarea',
 			'attributes' => [
 				'placeholder' => trans("admin::messages.Description"),
@@ -434,7 +436,7 @@ class PostController extends PanelController
 		foreach ($entries as $entry) {
 			$tab[$entry->tid] = $entry->name;
 			
-			$subEntries = Category::trans()->whereRaw('FIND_IN_SET('.$entry->id.',parent_id)')->orderBy('lft')->get();
+			$subEntries = Category::trans()->where('parent_id', $entry->id)->orderBy('lft')->get();
 			if (!empty($subEntries)) {
 				foreach ($subEntries as $subEntrie) {
 					$tab[$subEntrie->tid] = "---| " . $subEntrie->name;

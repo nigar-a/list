@@ -92,7 +92,7 @@
                         <?php
                         $all_entries = collect($entries->all())->sortBy('lft')->keyBy($xPanel->getModel()->getKeyName());
                         $root_entries = $all_entries->filter(function($item) use ($parent_id) {
-                            return preg_match("/(^|,)".$parent_id."(,|$)/",$item->parent_id); 
+                            return $item->parent_id == $parent_id;
                         });
                         ?>
                         @foreach ($root_entries as $key => $entry)
