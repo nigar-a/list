@@ -10,9 +10,8 @@
  */
 namespace Carbon\Traits;
 
-use BadMethodCallException;
 use Carbon\CarbonInterface;
-use Carbon\Exceptions\BadComparisonUnitException;
+use Carbon\Exceptions\BadUnitException;
 use InvalidArgumentException;
 
 /**
@@ -570,6 +569,8 @@ trait Comparison
      * @param string                                        $format date formats to compare.
      * @param \Carbon\Carbon|\DateTimeInterface|string|null $date   instance to compare with or null to use current day.
      *
+     * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     public function isSameAs($format, $date = null)
@@ -589,7 +590,7 @@ trait Comparison
      * @param string                                 $unit singular unit string
      * @param \Carbon\Carbon|\DateTimeInterface|null $date instance to compare with or null to use current day.
      *
-     * @throws BadComparisonUnitException
+     * @throws \InvalidArgumentException
      *
      * @return bool
      */
@@ -620,7 +621,7 @@ trait Comparison
             }
 
             if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
-                throw new BadComparisonUnitException($unit);
+                throw new BadUnitException($unit);
             }
 
             return false;
@@ -640,7 +641,7 @@ trait Comparison
      *
      * @param string $unit The unit to test.
      *
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      *
      * @return bool
      */

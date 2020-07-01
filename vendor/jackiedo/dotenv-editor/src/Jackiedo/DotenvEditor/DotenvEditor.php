@@ -327,18 +327,7 @@ class DotenvEditor
      */
     public function setKeys($data)
     {
-        foreach ($data as $i => $setter) {
-            if (!is_array($setter)) {
-                if (!is_string($i)) {
-                    continue;
-                }
-
-                $setter = [
-                    'key' => $i,
-                    'value' => $setter,
-                ];
-            }
-
+        foreach ($data as $setter) {
             if (array_key_exists('key', $setter)) {
                 $key     = $this->formatter->formatKey($setter['key']);
                 $value   = array_key_exists('value', $setter) ? $setter['value'] : null;

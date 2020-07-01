@@ -23,9 +23,6 @@
 					if (in_array($field->type, ['checkbox'])) {
 						$field->default = ($field->default == 1) ? t('Yes') : t('No');
 					}
-					if ($field->type == 'video') {
-						$field->default = \App\Helpers\VideoEmbedding::embedVideo($field->default);
-					}
 					?>
 					@if ($field->type == 'file')
 						<div class="detail-line col-xl-12 pb-2 pl-1 pr-1">
@@ -39,33 +36,11 @@
 							</div>
 						</div>
 					@else
-						@if (!is_array($field->default) and $field->type != 'video')
-							@if ($field->type == 'url')
-								<div class="detail-line col-sm-6 col-xs-12 pb-2 pl-1 pr-1">
-									<div class="rounded-small p-2">
-										<span class="detail-line-label">{{ $field->name }}</span>
-										<span class="detail-line-value">
-											<a href="{{ addHttp($field->default) }}" target="_blank" rel="nofollow">{{ addHttp($field->default) }}</a>
-										</span>
-									</div>
-								</div>
-							@else
-								<div class="detail-line col-sm-6 col-xs-12 pb-2 pl-1 pr-1">
-									<div class="rounded-small p-2">
-										<span class="detail-line-label">{{ $field->name }}</span>
-										<span class="detail-line-value">{{ $field->default }}</span>
-									</div>
-								</div>
-							@endif
-						@elseif (!is_array($field->default) and $field->type == 'video')
-							<div class="detail-line col-xl-12 pb-2 pl-1 pr-1">
+						@if (!is_array($field->default))
+							<div class="detail-line col-sm-6 col-xs-12 pb-2 pl-1 pr-1">
 								<div class="rounded-small p-2">
-									<span>{{ $field->name }}:</span>
-									<div class="row m-0 p-2">
-										<div class="col-lg-12 col-md-12 col-sm-12 text-center embed-responsive embed-responsive-16by9">
-											{!! $field->default !!}
-										</div>
-									</div>
+									<span class="detail-line-label">{{ $field->name }}</span>
+									<span class="detail-line-value">{{ $field->default }}</span>
 								</div>
 							</div>
 						@else

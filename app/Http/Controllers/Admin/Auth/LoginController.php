@@ -112,9 +112,6 @@ class LoginController extends Controller
         if (session()->has('country_code')) {
             $countryCode = session('country_code');
         }
-		if (session()->has('allowMeFromReferrer')) {
-			$allowMeFromReferrer = session('allowMeFromReferrer');
-		}
         
         // Remove all session vars
         $this->guard()->logout();
@@ -125,9 +122,6 @@ class LoginController extends Controller
         if (isset($countryCode) && !empty($countryCode)) {
             session(['country_code' => $countryCode]);
         }
-		if (isset($allowMeFromReferrer) && !empty($allowMeFromReferrer)) {
-			session(['allowMeFromReferrer' => $allowMeFromReferrer]);
-		}
         
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }

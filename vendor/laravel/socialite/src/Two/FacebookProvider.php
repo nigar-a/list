@@ -2,6 +2,7 @@
 
 namespace Laravel\Socialite\Two;
 
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Arr;
 
 class FacebookProvider extends AbstractProvider implements ProviderInterface
@@ -69,8 +70,10 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     public function getAccessTokenResponse($code)
     {
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
+
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'form_params' => $this->getTokenFields($code),
+            $postKey => $this->getTokenFields($code),
         ]);
 
         $data = json_decode($response->getBody(), true);

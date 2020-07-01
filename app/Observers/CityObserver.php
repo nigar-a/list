@@ -30,9 +30,9 @@ class CityObserver
 	public function deleting(City $city)
 	{
 		// Get Posts
-		$posts = Post::where('city_id', $city->id);
+		$posts = Post::where('city_id', $city->id)->get();
 		if ($posts->count() > 0) {
-			foreach ($posts->cursor() as $post) {
+			foreach ($posts as $post) {
 				$post->delete();
 			}
 		}
@@ -47,9 +47,9 @@ class CityObserver
 	public function updated(City $city)
 	{
 		// Update all the City's Posts
-		$posts = Post::where('city_id', $city->id);
+		$posts = Post::where('city_id', $city->id)->get();
 		if ($posts->count() > 0) {
-			foreach ($posts->cursor() as $post) {
+			foreach ($posts as $post) {
 				$post->lon = $city->longitude;
 				$post->lat = $city->latitude;
 				$post->save();

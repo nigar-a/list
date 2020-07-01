@@ -35,7 +35,7 @@ $(document).ready(function () {
  * @returns {boolean}
  */
 function showPhone() {
-	if ($('#postId').val() === 0 || $('#postId').val() === '') {
+	if ($('#postId').val() == 0) {
 		return false;
 	}
 	

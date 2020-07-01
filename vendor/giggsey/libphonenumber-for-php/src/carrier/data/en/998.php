@@ -11,7 +11,6 @@
  */
 
 return array (
-  9985 => 'Uzbektelecom',
   99861220 => 'MTS',
   99861221 => 'MTS',
   9986129 => 'MTS',

@@ -109,8 +109,7 @@ class CategoryField extends BaseModel
 		$out = '';
 		if (!empty($this->field)) {
 			$currentUrl = preg_replace('#/(search)$#', '', url()->current());
-			// $editUrl = $currentUrl . '/' . $this->field->id . '/edit';
-			$editUrl = $currentUrl . '/' . $this->id . '/edit';
+			$editUrl = $currentUrl . '/' . $this->field->id . '/edit';
 			
 			$out .= '<a href="' . $editUrl . '" style="float:left;">' . $this->field->name . '</a>';
 			

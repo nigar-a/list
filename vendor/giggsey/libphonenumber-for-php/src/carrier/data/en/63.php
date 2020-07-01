@@ -47,7 +47,6 @@ return array (
   63960 => 'Smart',
   63961 => 'Smart',
   63962 => 'Smart',
-  63963 => 'Smart',
   63965 => 'Globe',
   63966 => 'Globe',
   63967 => 'Globe',

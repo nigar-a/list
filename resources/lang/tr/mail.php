@@ -3,12 +3,11 @@
 return [
     'Whoops!' => 'Whoops!',
     'Hello!' => 'Hello!',
-    'Regards' => 'Saygılarımızla',
+    'Regards' => 'Regards',
 	'If you\'re having trouble clicking the ":actionText" button, copy and paste the URL below
 into your web browser:' => 'If you\'re having trouble clicking the ":actionText" button, copy and paste the URL below
 into your web browser:',
     'All rights reserved.' => 'All rights reserved.',
-	'footer_salutation' => 'Saygılarımızla,<br>:appName',
     'mail_footer_content' => 'Sell and buy near you. Simple, fast and efficient.',
     'email_verification_title' => 'Please verify your email address.',
     'email_verification_action' => 'Verify email address',

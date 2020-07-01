@@ -47,7 +47,6 @@ class UserNotification extends Notification implements ShouldQueue
 				'now'   => Date::now(config('timezone.id'))->formatLocalized(config('settings.app.default_date_format')),
 				'time'  => Date::now(config('timezone.id'))->format('H:i'),
 				'email' => $this->user->email
-			]))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			]));
 	}
 }

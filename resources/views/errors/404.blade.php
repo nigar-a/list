@@ -36,7 +36,7 @@
 								<h3 class="m-t-0"><i class="fa fa-warning"></i> :-( {{ t('Page not found') }} !</h3>
 								<p>
 									<?php
-									$defaultErrorMessage = t('Meanwhile, you may <a href=":url">return to homepage</a>', ['url' => lurl('/')]);
+									$defaultErrorMessage = t('Meanwhile, you may <a href=":url">return to homepage</a>', ['url' => url('/')]);
 									?>
 									{!! isset($exception) ? ($exception->getMessage() ? $exception->getMessage() : $defaultErrorMessage) : $defaultErrorMessage !!}
 								</p>

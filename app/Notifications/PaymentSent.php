@@ -63,8 +63,7 @@ class PaymentSent extends Notification implements ShouldQueue
 				'postUrl' => $postUrl,
 				'title'   => $this->post->title,
 			]))
-			->line(trans('mail.payment_sent_content_3'))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(trans('mail.payment_sent_content_3'));
 	}
 	
 	public function toNexmo($notifiable)

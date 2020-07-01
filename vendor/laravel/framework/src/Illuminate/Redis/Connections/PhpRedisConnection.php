@@ -4,7 +4,6 @@ namespace Illuminate\Redis\Connections;
 
 use Closure;
 use Illuminate\Contracts\Redis\Connection as ConnectionContract;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Redis;
 use RedisCluster;
@@ -241,7 +240,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      */
     public function zrangebyscore($key, $min, $max, $options = [])
     {
-        if (isset($options['limit']) && Arr::isAssoc($options['limit'])) {
+        if (isset($options['limit'])) {
             $options['limit'] = [
                 $options['limit']['offset'],
                 $options['limit']['count'],
@@ -262,7 +261,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      */
     public function zrevrangebyscore($key, $min, $max, $options = [])
     {
-        if (isset($options['limit']) && Arr::isAssoc($options['limit'])) {
+        if (isset($options['limit'])) {
             $options['limit'] = [
                 $options['limit']['offset'],
                 $options['limit']['count'],
@@ -513,8 +512,6 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
-     *
-     * @throws \RedisException
      */
     public function command($method, array $parameters = [])
     {

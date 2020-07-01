@@ -59,8 +59,7 @@ class SendPasswordAndEmailVerification extends Notification implements ShouldQue
 			$mailMessage->action(trans('mail.generated_password_login_action'), $loginUrl);
 		}
 		
-		$mailMessage->line(trans('mail.generated_password_content_6', ['appName' => config('app.name')]))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+		$mailMessage->line(trans('mail.generated_password_content_6', ['appName' => config('app.name')]));
 		
 		return $mailMessage;
 	}

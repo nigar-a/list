@@ -167,9 +167,6 @@ class LoginController extends FrontController
 		if (session()->has('country_code')) {
 			$countryCode = session('country_code');
 		}
-		if (session()->has('allowMeFromReferrer')) {
-			$allowMeFromReferrer = session('allowMeFromReferrer');
-		}
 		
 		// Remove all session vars
 		$this->guard()->logout();
@@ -179,9 +176,6 @@ class LoginController extends FrontController
 		// Retrieve the current Country
 		if (isset($countryCode) && !empty($countryCode)) {
 			session(['country_code' => $countryCode]);
-		}
-		if (isset($allowMeFromReferrer) && !empty($allowMeFromReferrer)) {
-			session(['allowMeFromReferrer' => $allowMeFromReferrer]);
 		}
 		
 		$message = t('You have been logged out.') . ' ' . t('See you soon.');

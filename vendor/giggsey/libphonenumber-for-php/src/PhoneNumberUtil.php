@@ -809,7 +809,7 @@ class PhoneNumberUtil
      * Returns the metadata for the given region code or {@code null} if the region code is invalid
      * or unknown.
      * @param string $regionCode
-     * @return null|PhoneMetadata
+     * @return PhoneMetadata
      */
     public function getMetadataForRegion($regionCode)
     {
@@ -1027,7 +1027,7 @@ class PhoneNumberUtil
     /**
      * @param int $countryCallingCode
      * @param string $regionCode
-     * @return null|PhoneMetadata
+     * @return PhoneMetadata
      */
     protected function getMetadataForRegionOrCallingCode($countryCallingCode, $regionCode)
     {
@@ -1037,7 +1037,7 @@ class PhoneNumberUtil
 
     /**
      * @param int $countryCallingCode
-     * @return null|PhoneMetadata
+     * @return PhoneMetadata
      */
     public function getMetadataForNonGeographicalRegion($countryCallingCode)
     {

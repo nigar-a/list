@@ -62,8 +62,7 @@ class PostActivated extends Notification implements ShouldQueue
 				'title'   => $this->post->title,
 			]))
 			->line(trans('mail.post_activated_content_3'))
-			->line(trans('mail.post_activated_content_4', ['appName' => config('app.name')]))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(trans('mail.post_activated_content_4', ['appName' => config('app.name')]));
 	}
 	
 	public function toNexmo($notifiable)

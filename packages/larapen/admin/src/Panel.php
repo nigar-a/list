@@ -156,7 +156,7 @@ class Panel
 		if (!empty($parentKeyField)) {
 			try {
 				$entry = $this->model->query()
-					->where($parentKeyField, $id)
+					->whereRaw('FIND_IN_SET('.$id.','.$parentKeyField.')')
 					->where($this->model->getKeyName(), $childId)
 					->first();
 			} catch (\Exception $e) {
@@ -170,6 +170,51 @@ class Panel
 		
 		return $entry;
 	}
+
+
+	/**
+	 * @param $slug
+	 * @return null
+	 */
+	public function getEntryWithSlug($slug)
+	{
+		$entry = null;
+		
+		if (!empty($slug)) {
+			$entry = $this->model->query()
+					->where('slug', $slug)
+					->first();
+		}
+		
+		return $entry;
+	}
+	
+		/**
+		 * @param $slug
+		 * @return null
+		 */
+		public function updateEntryParent($parent_id, $entry_id)
+		{
+			$updated = false;
+			
+			if (!empty($parent_id) && !empty($entry_id)) {
+				try {
+					$updated = $this->model->query()
+						->where('id', $entry_id)
+						->update(['parent_id' => $parent_id]);
+				} catch (\Exception $e) {
+					abort(400, $e->getMessage());
+				}
+				
+				if (!$updated) {
+					abort(404, 'Could not update');
+				}
+			}
+			
+			return $updated;
+		}
+	
+
 	
 	/**
 	 * Set the route for this CRUD using the route name.

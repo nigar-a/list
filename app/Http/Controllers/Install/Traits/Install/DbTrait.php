@@ -40,7 +40,7 @@ trait DbTrait
 		$pdo = DBTool::getPDOConnexion($database);
 		
 		// Check if database is not empty
-		$rules = [];
+		$rules      = [];
 		$tableNames = $this->getDatabaseTables($pdo, $database);
 		if (is_array($tableNames) && count($tableNames) > 0) {
 			// 1. Drop all old tables
@@ -48,7 +48,7 @@ trait DbTrait
 			
 			// 2. Check if all table are dropped (Check if database's tables still exist)
 			$tablesExist = false;
-			$tableNames = $this->getDatabaseTables($pdo, $database);
+			$tableNames  = $this->getDatabaseTables($pdo, $database);
 			if (is_array($tableNames) && count($tableNames) > 0) {
 				$tablesExist = true;
 			}
@@ -89,19 +89,15 @@ trait DbTrait
 	{
 		$tables = [];
 		
-		try {
-			$filter = !empty($database['prefix']) ? ' AND table_name LIKE "' . $database['prefix'] . '%"' : '';
-			$sql = 'SELECT GROUP_CONCAT(table_name) AS table_names
-					FROM information_schema.tables
-					WHERE table_schema = "' . $database['database'] . '"' . $filter;
-			$query = $pdo->query($sql);
-			$obj = $query->fetch();
-			
-			if (isset($obj->table_names)) {
-				$tables = array_merge($tables, explode(',', $obj->table_names));
-			}
-		} catch (\Exception $e) {
-			dd($e->getMessage());
+		$filter = !empty($database['prefix']) ? ' AND table_name LIKE "' . $database['prefix'] . '%"' : '';
+		$sql    = 'SELECT GROUP_CONCAT(table_name) AS table_names
+				FROM information_schema.tables
+                WHERE table_schema = "' . $database['database'] . '"' . $filter;
+		$query  = $pdo->query($sql);
+		$obj    = $query->fetch();
+		
+		if (isset($obj->table_names)) {
+			$tables = array_merge($tables, explode(',', $obj->table_names));
 		}
 		
 		return $tables;
@@ -182,11 +178,11 @@ trait DbTrait
 			
 			// USERS - Insert default superuser
 			$pdo->exec('DELETE FROM `' . $tablesPrefix . 'users` WHERE 1');
-			$sql = 'INSERT INTO `' . $tablesPrefix . 'users`
+			$sql   = 'INSERT INTO `' . $tablesPrefix . 'users`
 				(`id`, `country_code`, `user_type_id`, `gender_id`, `name`, `about`, `email`, `password`, `is_admin`, `verified_email`, `verified_phone`)
 				VALUES (1, :countryCode, 1, 1, :name, "Administrator", :email, :password, 1, 1, 1);';
 			$query = $pdo->prepare($sql);
-			$res = $query->execute([
+			$res   = $query->execute([
 				':countryCode' => $siteInfo['default_country'],
 				':name'        => $siteInfo['name'],
 				':email'       => $siteInfo['email'],
@@ -197,9 +193,9 @@ trait DbTrait
 			$this->setupAclSystem();
 			
 			// COUNTRIES - Activate default country
-			$sql = 'UPDATE `' . $tablesPrefix . 'countries` SET `active`=1 WHERE `code`=:countryCode';
+			$sql   = 'UPDATE `' . $tablesPrefix . 'countries` SET `active`=1 WHERE `code`=:countryCode';
 			$query = $pdo->prepare($sql);
-			$res = $query->execute([
+			$res   = $query->execute([
 				':countryCode' => $siteInfo['default_country'],
 			]);
 			
@@ -211,9 +207,9 @@ trait DbTrait
 				'slogan'        => isset($siteInfo['site_slogan']) ? $siteInfo['site_slogan'] : '',
 				'email'         => isset($siteInfo['email']) ? $siteInfo['email'] : '',
 			];
-			$sql = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:appSettings WHERE `key`="app"';
-			$query = $pdo->prepare($sql);
-			$res = $query->execute([
+			$sql         = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:appSettings WHERE `key`="app"';
+			$query       = $pdo->prepare($sql);
+			$res         = $query->execute([
 				':appSettings' => json_encode($appSettings),
 			]);
 			
@@ -222,9 +218,9 @@ trait DbTrait
 				'default_country_code' => isset($siteInfo['default_country']) ? $siteInfo['default_country'] : '',
 			];
 			
-			$sql = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:geoLocationSettings WHERE `key`="geo_location"';
+			$sql   = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:geoLocationSettings WHERE `key`="geo_location"';
 			$query = $pdo->prepare($sql);
-			$res = $query->execute([
+			$res   = $query->execute([
 				':geoLocationSettings' => json_encode($geoLocationSettings),
 			]);
 			
@@ -238,11 +234,11 @@ trait DbTrait
 					$mailSettings['sendmail_path'] = isset($siteInfo['sendmail_path']) ? $siteInfo['sendmail_path'] : '';
 				}
 				if (in_array($siteInfo['mail_driver'], ['smtp', 'mailgun', 'mandrill', 'ses', 'sparkpost'])) {
-					$mailSettings['host'] = isset($siteInfo['smtp_hostname']) ? $siteInfo['smtp_hostname'] : '';
-					$mailSettings['port'] = isset($siteInfo['smtp_port']) ? $siteInfo['smtp_port'] : '';
+					$mailSettings['host']       = isset($siteInfo['smtp_hostname']) ? $siteInfo['smtp_hostname'] : '';
+					$mailSettings['port']       = isset($siteInfo['smtp_port']) ? $siteInfo['smtp_port'] : '';
 					$mailSettings['encryption'] = isset($siteInfo['smtp_encryption']) ? $siteInfo['smtp_encryption'] : '';
-					$mailSettings['username'] = isset($siteInfo['smtp_username']) ? $siteInfo['smtp_username'] : '';
-					$mailSettings['password'] = isset($siteInfo['smtp_password']) ? $siteInfo['smtp_password'] : '';
+					$mailSettings['username']   = isset($siteInfo['smtp_username']) ? $siteInfo['smtp_username'] : '';
+					$mailSettings['password']   = isset($siteInfo['smtp_password']) ? $siteInfo['smtp_password'] : '';
 				}
 				if ($siteInfo['mail_driver'] == 'mailgun') {
 					$mailSettings['mailgun_domain'] = isset($siteInfo['mailgun_domain']) ? $siteInfo['mailgun_domain'] : '';
@@ -252,7 +248,7 @@ trait DbTrait
 					$mailSettings['mandrill_secret'] = isset($siteInfo['mandrill_secret']) ? $siteInfo['mandrill_secret'] : '';
 				}
 				if ($siteInfo['mail_driver'] == 'ses') {
-					$mailSettings['ses_key'] = isset($siteInfo['ses_key']) ? $siteInfo['ses_key'] : '';
+					$mailSettings['ses_key']    = isset($siteInfo['ses_key']) ? $siteInfo['ses_key'] : '';
 					$mailSettings['ses_secret'] = isset($siteInfo['ses_secret']) ? $siteInfo['ses_secret'] : '';
 					$mailSettings['ses_region'] = isset($siteInfo['ses_region']) ? $siteInfo['ses_region'] : '';
 				}
@@ -260,9 +256,9 @@ trait DbTrait
 					$mailSettings['sparkpost_secret'] = isset($siteInfo['sparkpost_secret']) ? $siteInfo['sparkpost_secret'] : '';
 				}
 			}
-			$sql = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:mailSettings WHERE `key`="mail"';
+			$sql   = 'UPDATE `' . $tablesPrefix . 'settings` SET `value`=:mailSettings WHERE `key`="mail"';
 			$query = $pdo->prepare($sql);
-			$res = $query->execute([
+			$res   = $query->execute([
 				':mailSettings' => json_encode($mailSettings),
 			]);
 			

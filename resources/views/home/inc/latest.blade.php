@@ -11,9 +11,8 @@ if (config('settings.listing.display_mode') == '.compact-view') {
 }
 ?>
 @if (isset($posts) and count($posts) > 0)
-	@include('home.inc.spacer')
 	<div class="container">
-		<div class="col-xl-12 content-box layout-section">
+		<div class="col-xl-9 pull-left content-box layout-section latest-list">
 			<div class="row row-featured row-featured-category">
 				
 				<div class="col-xl-12 box-title no-border">
@@ -58,7 +57,10 @@ if (config('settings.listing.display_mode') == '.compact-view') {
 					} else {
 						$postImg = imgUrl(config('larapen.core.picture.default'));
 					}
-		
+					/*$postImg = str_replace('\\', '', $postImg);
+					if(!is_file($postImg)){
+						$postImg = 'http://lorempixel.com/320/240/abstract';
+					}*/
 					// Get the Post's City
 					$cacheId = config('country.code') . '.city.' . $post->city_id;
 					$city = \Illuminate\Support\Facades\Cache::remember($cacheId, $cacheExpiration, function () use ($post) {
@@ -112,9 +114,9 @@ if (config('settings.listing.display_mode') == '.compact-view') {
 									</h5>
 									
 									<span class="info-row">
-										<span class="add-type business-ads tooltipHere" data-toggle="tooltip" data-placement="right" title="{{ $postType->name }}">
+										<!-- <span class="add-type business-ads tooltipHere" data-toggle="tooltip" data-placement="right" title="{{ $postType->name }}">
 											{{ strtoupper(mb_substr($postType->name, 0, 1)) }}
-										</span>&nbsp;
+										</span>&nbsp; -->
 										<span class="date"><i class="icon-clock"></i> {{ $post->created_at }} </span>
 										@if (isset($liveCatParentId) and isset($liveCatName))
 											<span class="category">
@@ -122,10 +124,10 @@ if (config('settings.listing.display_mode') == '.compact-view') {
 												<a href="{!! qsurl(config('app.locale').'/'.trans('routes.v-search', ['countryCode' => config('country.icode')]), array_merge(request()->except('c'), ['c'=>$liveCatParentId]), null, false) !!}" class="info-link">{{ $liveCatName }}</a>
 											</span>
 										@endif
-										<span class="item-location">
+										<!-- <span class="item-location">
 											<i class="icon-location-2"></i>&nbsp;
 										<a href="{!! qsurl(config('app.locale').'/'.trans('routes.v-search', ['countryCode' => config('country.icode')]), array_merge(request()->except(['l', 'location']), ['l'=>$post->city_id]), null, false) !!}" class="info-link">{{ $city->name }}</a> {{ (isset($post->distance)) ? '- ' . round($post->distance, 2) . getDistanceUnit() : '' }}
-										</span>
+										</span> -->
 									</span>
 								</div>
 								
@@ -174,7 +176,7 @@ if (config('settings.listing.display_mode') == '.compact-view') {
 					@if (isset($latestOptions) and isset($latestOptions['show_view_more_btn']) and $latestOptions['show_view_more_btn'] == '1')
 						<div class="mb20 text-center">
 							<?php $attr = ['countryCode' => config('country.icode')]; ?>
-							<a href="{{ lurl(trans('routes.v-search', $attr), $attr) }}" class="btn btn-default mt10">
+							<a href="{{ lurl(trans('routes.v-search', $attr), $attr) }}" class="btn btn-default mt10 more-link">
 								<i class="fa fa-arrow-circle-right"></i> {{ t('View more') }}
 							</a>
 						</div>

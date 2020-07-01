@@ -31,7 +31,6 @@ trait ParametersTrait
     /**
      * Get one parameter.
      *
-     * @param  string $key Parameter key
      * @return mixed A single parameter value.
      */
     protected function getParameter($key)

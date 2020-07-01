@@ -38,11 +38,11 @@ class BlacklistWordRule implements Rule
 				$startPatten = '\s\-.,;:=/#\|_<>';
 				$endPatten = $startPatten . 's';
 				try {
-					if (preg_match('|[' . $startPatten . '\\\]+' . $word->entry . '[' . $endPatten . '\\\]+|ui', ' ' . $value . ' ')) {
+					if (preg_match('|[' . $startPatten . '\\\]+' . $word->entry . '[' . $endPatten . '\\\]+|i', ' ' . $value . ' ')) {
 						return false;
 					}
 				} catch (\Exception $e) {
-					if (preg_match('|[' . $startPatten . ']+' . $word->entry . '[' . $endPatten . ']+|ui', ' ' . $value . ' ')) {
+					if (preg_match('|[' . $startPatten . ']+' . $word->entry . '[' . $endPatten . ']+|i', ' ' . $value . ' ')) {
 						return false;
 					}
 				}

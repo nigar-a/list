@@ -33,8 +33,6 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise describeProtectedResourceAsync(array $args = [])
  * @method \Aws\Result describeRecoveryPoint(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeRecoveryPointAsync(array $args = [])
- * @method \Aws\Result describeRegionSettings(array $args = [])
- * @method \GuzzleHttp\Promise\Promise describeRegionSettingsAsync(array $args = [])
  * @method \Aws\Result describeRestoreJob(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeRestoreJobAsync(array $args = [])
  * @method \Aws\Result exportBackupPlanTemplate(array $args = [])
@@ -99,7 +97,5 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise updateBackupPlanAsync(array $args = [])
  * @method \Aws\Result updateRecoveryPointLifecycle(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateRecoveryPointLifecycleAsync(array $args = [])
- * @method \Aws\Result updateRegionSettings(array $args = [])
- * @method \GuzzleHttp\Promise\Promise updateRegionSettingsAsync(array $args = [])
  */
 class BackupClient extends AwsClient {}

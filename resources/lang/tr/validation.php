@@ -215,8 +215,4 @@ return [
     'attributes.from_name' => 'name',
     'attributes.from_email' => 'email',
     'attributes.from_phone' => 'phone',
-    'date_is_valid_rule' => 'The :attribute field does not contain a valid date.',
-    'date_future_is_valid_rule' => 'The date of :attribute field need to be in the future.',
-    'date_past_is_valid_rule' => 'The date of :attribute field need to be in the past.',
-    'video_link_is_valid_rule' => 'The :attribute field does not contain a valid (Youtube or Vimeo) video link.',
 ];

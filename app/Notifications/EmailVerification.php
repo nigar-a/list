@@ -51,7 +51,6 @@ class EmailVerification extends Notification implements ShouldQueue
 			->greeting(trans('mail.email_verification_content_1', ['userName' => $this->entity->{$this->entityRef['name']},]))
 			->line(trans('mail.email_verification_content_2'))
 			->action(trans('mail.email_verification_action'), $verificationUrl)
-			->line(trans('mail.email_verification_content_3', ['appName' => config('app.name')]))
-			->salutation(trans('mail.footer_salutation', ['appName' => config('app.name')]));
+			->line(trans('mail.email_verification_content_3', ['appName' => config('app.name')]));
 	}
 }

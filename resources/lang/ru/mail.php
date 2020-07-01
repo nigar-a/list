@@ -1,20 +1,19 @@
-<?php
+<?php 
 
 return [
-    'Whoops!' => 'Упс!',
+    'Whoops!' => 'Возгласы!',
     'Hello!' => 'Привет!',
     'Regards' => 'С уважением',
 	'If you\'re having trouble clicking the ":actionText" button, copy and paste the URL below
 into your web browser:' => 'Если у вас возникли проблемы с нажатием кнопки ":actionText", скопируйте и вставьте URL-адрес ниже
 в ваш веб-браузер:',
     'All rights reserved.' => 'Все права защищены.',
-	'footer_salutation' => 'С уважением,<br>:appName',
     'mail_footer_content' => 'Продавайте и покупайте с нами. Просто, быстро и эффективно.',
     'email_verification_title' => 'Пожалуйста подтвердите ваш адрес электронной почты.',
     'email_verification_action' => 'Подтвердите адрес электронной почты',
     'email_verification_content_1' => 'Здравствуйте :userName !',
     'email_verification_content_2' => 'Нажмите кнопку ниже, чтобы подтвердить свой адрес электронной почты..',
-    'email_verification_content_3' => 'Вы получили это письмо, потому что недавно вы создали новый:appName аккаунт или добавили новый адрес электронной почты. Если это не вы, пожалуйста, проигнорируйте это письмо.',
+    'email_verification_content_3' => 'You’re Вы получили это письмо, потому что недавно вы создали новый:appName аккаунт или добавили новый адрес электронной почты. Если это не вы, пожалуйста, проигнорируйте это письмо.',
     'post_activated_title' => 'Ваше объявление активировано',
     'post_activated_content_1' => 'Здравствуйте,',
     'post_activated_content_2' => 'Ваше объявление <a href=":postUrl">:title</a> было активировано.',
