@@ -40,7 +40,7 @@ class CloseController extends AccountBaseController
 			
 			// Don't delete admin users
 			if ($user->can(Permission::getStaffPermissions())) {
-				flash("Admin users can't be deleted by this way.")->error();
+				flash(t('admin_users_cannot_be_deleted'))->error();
 				return redirect(config('app.locale') . '/account');
 			}
 			

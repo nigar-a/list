@@ -155,9 +155,9 @@ trait LangTablesTrait
 			}
 			
 			// Change "translation_of" value with new Default Language
-			$entries = $model::all();
+			$entries = $model::query();
 			if ($entries->count() > 0) {
-				foreach($entries as $entry) {
+				foreach($entries->cursor() as $entry) {
 					if (isset($newTid[$entry->translation_of])) {
 						$entry->translation_of = $newTid[$entry->translation_of];
 						$entry->save();
@@ -172,9 +172,9 @@ trait LangTablesTrait
 						continue;
 					}
 					$relModel = $this->namespace . $relation['name'];
-					$relEntries = $relModel::all();
+					$relEntries = $relModel::query();
 					if ($relEntries->count() > 0) {
-						foreach($relEntries as $relEntry) {
+						foreach($relEntries->cursor() as $relEntry) {
 							if (isset($newTid[$relEntry->{$relation['key']}])) {
 								// Update the relation entry
 								$relEntry->{$relation['key']} = $newTid[$relEntry->{$relation['key']}];
@@ -209,9 +209,9 @@ trait LangTablesTrait
 			}
 			
 			// Get the model's main entries
-			$translatedEntries = $model::where('translation_lang', strtolower($abbr))->get();
+			$translatedEntries = $model::where('translation_lang', strtolower($abbr));
 			if ($translatedEntries->count() > 0) {
-				foreach($translatedEntries as $entry) {
+				foreach($translatedEntries->cursor() as $entry) {
 					// Delete
 					$entry->delete();
 				}

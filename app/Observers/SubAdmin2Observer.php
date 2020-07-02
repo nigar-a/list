@@ -30,9 +30,9 @@ class SubAdmin2Observer
 	public function deleting(SubAdmin2 $admin)
 	{
 		// Delete all the Admin's Cities
-		$cities = City::countryOf($admin->country_code)->where('subadmin2_code', $admin->code)->get();
+		$cities = City::countryOf($admin->country_code)->where('subadmin2_code', $admin->code);
 		if ($cities->count() > 0) {
-			foreach ($cities as $city) {
+			foreach ($cities->cursor() as $city) {
 				$city->delete();
 			}
 		}
