@@ -159,8 +159,7 @@
 	
 	@section('header')
 		@include('layouts.inc.header')
-	@show
-		
+	@show		
 	@section('wizard')
 	@show
 	
