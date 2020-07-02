@@ -233,11 +233,13 @@ class PostController extends PanelController
 				'placeholder' => trans("admin::messages.Title"),
 			],
 		]);
+		$wysiwygEditor = config('settings.single.wysiwyg_editor');
+		$wysiwygEditorViewPath = '/views/vendor/admin/panel/fields/' . $wysiwygEditor . '.blade.php';
 		$this->xPanel->addField([
 			'name'       => 'description',
 			'label'      => trans("admin::messages.Description"),
-			'type'       => (config('settings.single.simditor_wysiwyg'))
-				? 'simditor'
+			'type'       => ($wysiwygEditor != 'none' && file_exists(resource_path() . $wysiwygEditorViewPath))
+				? $wysiwygEditor
 				: 'textarea',
 			'attributes' => [
 				'placeholder' => trans("admin::messages.Description"),
