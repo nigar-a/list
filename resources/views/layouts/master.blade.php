@@ -160,9 +160,6 @@
 	@section('header')
 		@include('layouts.inc.header')
 	@show
-
-<!-- 	@section('search')
-	@show -->
 		
 	@section('wizard')
 	@show
