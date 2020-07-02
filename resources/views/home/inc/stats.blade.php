@@ -1,7 +1,7 @@
 @if (isset($countPosts) and isset($countUsers) and isset($countCities))
 @include('home.inc.spacer')
 <div class="container">
-	<div class="page-info page-info-lite rounded">
+	<div class="pull-left col-xl-9 page-info page-info-lite">
 		<div class="text-center section-promo">
 			<div class="row">
 	
@@ -57,4 +57,5 @@
 		</div>
 	</div>
 </div>
+<div style="clear: both"></div>
 @endif

@@ -62,6 +62,9 @@ if (getSegment(1) != trans('routes.countries')) {
 			</div>
 			
 			<div class="navbar-collapse collapse">
+				@section('search')
+					@include('home.inc.search')
+				@show
 				<ul class="nav navbar-nav navbar-left">
 					{{-- Country Flag --}}
 					@if (getSegment(1) != trans('routes.countries'))
