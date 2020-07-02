@@ -70,7 +70,6 @@ function appSetLocale($locale)
 	try {
 		exec('locale -a', $locales);
 	} catch (\Exception $e) {}
-	
 	if (!isset($locales) || empty($locales)) {
 		$locales = array_keys((array)config('locales'));
 	}
@@ -83,32 +82,10 @@ function appSetLocale($locale)
 		}
 	}
 	
-	// If not found, try to use locale with codeset (If it exists)
 	if (!$localeFound) {
-		if (is_array($locales)) {
-			foreach ($locales as $sysLocale) {
-				/*
-				 * Check if $locale exists on the server with a codeset (locale.codeset)
-				 * e.g. tr_TR.UTF-8, ru_RU.UTF-8, ru_RU.ISO8859-5, fr_CH.ISO8859-15, ...
-				 * More Info: https://stackoverflow.com/a/24355529
-				 */
-				$pattern = '#' . $locale . '\.#i';
-				if (preg_match($pattern, $sysLocale)) {
-					if (setlocale(LC_ALL, $locale)) {
-						\Jenssegers\Date\Date::setLocale($locale);
-						setlocale(LC_ALL, $locale);
-						$localeFound = true;
-					}
-				}
-			}
-		}
-		
-		// If not found, force to use a fixed locale
-		if (!$localeFound) {
-			$locale = 'en_US';
-			\Jenssegers\Date\Date::setLocale($locale);
-			setlocale(LC_ALL, $locale);
-		}
+		$locale = 'en_US';
+		\Jenssegers\Date\Date::setLocale($locale);
+		setlocale(LC_ALL, $locale);
 	}
 	
 	return $locale;
@@ -873,7 +850,7 @@ function getExtension($filename)
  */
 function transformDescription($string)
 {
-	if (config('settings.single.wysiwyg_editor') != 'none') {
+	if (config('settings.single.simditor_wysiwyg')) {
 		
 		try {
 			$string = \Mews\Purifier\Facades\Purifier::clean($string);
@@ -1040,7 +1017,6 @@ function tagCleaner($string)
 			}
 		}
 	}
-	$tags = array_unique($tags);
 	
 	return !empty($tags) ? substr(implode(',', $tags), 0, 255) : null;
 }

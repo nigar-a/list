@@ -76,7 +76,7 @@ return [
      |
      */
     'picture' => [
-        'default'   => 'app/default/picture.jpg',
+        'default'   => '../public/images/thumb.png',
         'versioned' => env('PICTURE_VERSIONED', false),
         'version'   => env('PICTURE_VERSION', 1),
     ],
@@ -192,7 +192,7 @@ return [
     
     /*
      |-----------------------------------------------------------------------------------------------
-     | Custom Prefix for the new locations (Administrative Divisions) Codes
+     | Custom Prefix for the new locations (Administratives Divisions) Codes
      |-----------------------------------------------------------------------------------------------
      |
      */
